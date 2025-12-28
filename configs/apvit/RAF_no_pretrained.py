@@ -1,7 +1,7 @@
 
 _base_ = [
     '../_base_/default_runtime.py',
-    f'../_base_/datasets/RAF.py',
+    f'../_base_/datasets/RAF_local_path.py',
 ]
 
 
