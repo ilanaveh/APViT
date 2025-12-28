@@ -38,7 +38,7 @@ test_pipeline = [
     dict(type='Collect', keys=['img', ])
 ]
 
-base_path = 'data/RAF-DB/basic/'
+base_path = '/home/projects/bagon/ilanaveh/data/RAF-DB/basic/'
 image_path = base_path + 'Image/aligned_224'    # we use realigned images
 
 data = dict(
