@@ -17,6 +17,8 @@ from mmcls.datasets import build_dataset
 from mmcls.models import build_classifier
 from mmcls.utils import collect_env, get_root_logger
 
+from utils import pretty_text
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
@@ -114,7 +116,7 @@ def main():
 
     # log some basic info
     logger.info(f'Distributed training: {distributed}')
-    logger.info(f'Config:\n{cfg.pretty_text}')
+    logger.info(f'Config:\n{pretty_text(cfg._cfg_dict.to_dict())}')
 
     # set random seeds
     if args.seed is not None:
@@ -142,7 +144,7 @@ def main():
         # checkpoints as meta data
         cfg.checkpoint_config.meta = dict(
             mmcls_version=__version__,
-            config=cfg.pretty_text,
+            config=pretty_text(cfg._cfg_dict.to_dict()),
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     print(f'Train on {len(datasets[0])} samples')
