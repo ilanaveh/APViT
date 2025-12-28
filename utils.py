@@ -5,7 +5,22 @@ Added file for helper functions (e.g. override functions from mmcls that have pr
 from yapf.yapflib.yapf_api import FormatCode
 
 
-def pretty_text(self):
+def pretty_text(cfg_dict):
+    """
+    Based on pretty_text property from Config Class in mmcv.utils.config.Config.pretty_text.
+    The problem was that they used 'FormatCode(text, style_config=yapf_style, verify=True)', but 'verify' is no longer
+    an argument for FormatCode.
+    So this function is for independent usage (not within a Config instance)
+        => instead of using self._cfg_dict, it gets cfg_dict directly.
+
+    Changes:
+        1. Arg cfg_dict instead of self.
+        2. In accordance with 1, use cfg_dict instead of self._cfg_dict.
+        3. Remove 'verify' from FormatCode arguments.
+
+    Usage:
+        pretty_text(cfg._cfg_dict.to_dict())
+    """
     indent = 4
 
     def _indent(s_, num_spaces):
@@ -86,11 +101,10 @@ def pretty_text(self):
             r += '}'
         return r
 
-    cfg_dict = self._cfg_dict.to_dict()
     text = _format_dict(cfg_dict, outest_level=True)
     # copied from setup.cfg
     yapf_style = dict(
         based_on_style='pep8',
         blank_line_before_nested_class_or_def=True,
         split_before_expression_after_opening_paren=True)
-    text, _ = FormatCode(text, style_config=yapf_style, verify=True)
+    text, _ = FormatCode(text, style_config=yapf_style)
