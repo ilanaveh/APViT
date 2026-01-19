@@ -1,7 +1,7 @@
 
 _base_ = [
     '../_base_/default_runtime.py',
-    f'../_base_/datasets/RAF.py',
+    f'../_base_/datasets/RAF_local_path.py',
 ]
 
 
@@ -14,7 +14,7 @@ model = dict(
         type='IRSE',
         input_size=(112, 112),
         num_layers=50,
-        pretrained='weights/backbone_ir50_ms1m_epoch120.pth',
+        pretrained='weights/ms1m_ir50/backbone_ir50_ms1m_epoch120.pth',
         mode='ir',
         return_index=[2],   # only use the first 3 stages
         return_type='Tuple',
