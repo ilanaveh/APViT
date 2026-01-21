@@ -1,11 +1,22 @@
-
+"""
+Based on RAF.
+Changes:
+    - local paths.
+    - use _base_/datasets/RAF_local_path.py instead of _base_/datasets/RAF.py
+    - change vit parameters to match deit pretrained models:
+        depth=12 (instead of 8)
+        num_heads=12 (instead of 8)
+        mlp_ratio=4 (instead of 3)
+        qkv_bias=True (instead of False)
+    - use pretrained deit for vit weights.
+"""
 _base_ = [
     '../_base_/default_runtime.py',
     f'../_base_/datasets/RAF_local_path.py',
 ]
 
 
-vit_small = dict(img_size=112, patch_size=16, embed_dim=768, num_heads=8, mlp_ratio=3, qkv_bias=False, norm_layer_eps=1e-6)
+vit_small = dict(img_size=112, patch_size=16, embed_dim=768, num_heads=12, mlp_ratio=4, qkv_bias=True, norm_layer_eps=1e-6)
 
 num_stages = 3
 model = dict(
@@ -22,15 +33,15 @@ model = dict(
     convert=None,
     vit=dict(
         type='PoolingViT',
-        pretrained='weights/vit_small_p16_224-15ec54c9.pth',
+        pretrained='/home/projects/bagon/ilanaveh/code/Transformers/deit/out/deit_blur0_rep/best_checkpoint.pth',
         input_type='feature',
         patch_num=196,
         in_channels=[256],
         attn_method='SUM_ABS_1',
         sum_batch_mean=False,
         cnn_pool_config=dict(keep_num=160, exclude_first=False),
-        vit_pool_configs=dict(keep_rates=[1.] * 4 + [0.9] * 4, exclude_first=True, attn_method='SUM'),  # None by default
-        depth=8,
+        vit_pool_configs=dict(keep_rates=[1.] * 4 + [0.9] * 8, exclude_first=True, attn_method='SUM'),  # None by default
+        depth=12,
         **vit_small,
     ),
     head=dict(
