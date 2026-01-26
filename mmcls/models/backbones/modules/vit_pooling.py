@@ -49,6 +49,13 @@ class PoolingAttention(nn.Module):
         else:
             keep_index = None
 
+        # IN 26/1/26: Add for visualizing attention (viz_attention_vit.py)
+        self.attn_weight = attn_weight.detach()
+        if keep_index is not None:
+            self.keep_index = top_pool(attn_weight, dim=1, **self.pool_config).detach()  # dim=1
+        else:
+            self.keep_index = None
+
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
 
