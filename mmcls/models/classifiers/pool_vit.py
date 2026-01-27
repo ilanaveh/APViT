@@ -217,3 +217,44 @@ class PoolingVitClassifier(BaseClassifier):
             return cam
 
 
+@CLASSIFIERS.register_module()
+class PoolingViTClassifierKD(PoolingVitClassifier):
+    def __init__(self, *args, **kargs):
+        super().__init__(*args, **kargs)
+
+    def extract_feat(self, img):
+        """
+        Currently: copy-paste from PoolingVitClassifier extract_feat.
+        """
+        aux_loss = dict()
+        if hasattr(self, 'extractor'):
+            x = self.extractor(img)
+        else:
+            x = img
+        if hasattr(self, 'convert'):
+            x = self.convert(x)
+        else:
+            x = dict(x=x)
+        x = self.vit(**x)
+        if isinstance(x, dict):
+            aux_loss.update(x['loss'])
+            x = x['x']
+        if self.with_neck:
+            x = self.neck(x)
+        return x, aux_loss
+
+    def forward_train(self, img, gt_label, au_label=None, **kwargs):
+        """Currently: copy-paste from PoolingVitClassifier forward_train.
+        """
+        x, aux_loss = self.extract_feat(img)
+
+        if au_label is None:
+            losses = self.head.forward_train(x, gt_label)
+        else:
+            losses = self.head.forward_train(x, gt_label, au_label)
+        # losses['ce_loss'] = losses['loss']
+        # losses['loss'] *= 0.
+        # losses['aux_loss'] = aux_loss
+        losses.update(aux_loss)
+
+        return losses
