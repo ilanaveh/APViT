@@ -1354,3 +1354,7 @@ class StudentPoolingViT(PoolingViT):
             x = x + x.mean(dim=0) * self.alpha
         loss = dict()
         return x, loss, attn_map
+
+    def forward(self, x, **kwargs):
+        x, loss, attn_map = self.forward_features(x)
+        return dict(x=x, loss=dict(VitDiv_loss=loss), attn_map=attn_map)
