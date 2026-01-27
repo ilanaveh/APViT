@@ -1293,3 +1293,64 @@ class DeFPNViTV7(BaseBackbone):
         return dict(x=x, loss=dict(VitDiv_loss=loss))
 
 
+@BACKBONES.register_module()
+class StudentPoolingViT(PoolingViT):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def forward_features(self, x):
+        """
+        Currently: copy-paste from PoolingViT forward teachers.
+        :param x:
+        :return:
+        """
+        assert len(x) == 1, '目前只支持1个 stage'
+        assert isinstance(x, list) or isinstance(x, tuple)
+        if len(x) == 2:  # S2, S3
+            x[0] = self.s2_pooling(x[0])
+        elif len(x) == 3:
+            x[0] = nn.MaxPool2d(kernel_size=4)(x[0])
+            x[1] = self.s2_pooling(x[1])
+        if os.getenv('DEBUG_MODE') == '1':
+            print(x[0].shape)
+
+        x = [self.projs[i](x[i]) for i in range(len(x))]
+        # x = x[0]
+        B, C, H, W = x[-1].shape
+        attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+        if self.attn_method == 'LA':
+            x[-1] = x[-1] * attn_map  # to have gradient
+        x = [i.flatten(2).transpose(2, 1) for i in x]
+        # x = self.projs[0](x).flatten(2).transpose(2, 1)
+        # disable the first row and columns
+        # attn_map[:, :, 0, :] = 0.
+        # attn_map[:, :, :, 0] = 0.
+        attn_weight = attn_map.flatten(2).transpose(2, 1)
+
+        # attn_weight = torch.rand(attn_weight.shape, device=attn_weight.device)
+
+        x = torch.stack(x).sum(dim=0)  # S1 + S2 + S3
+        x = x + self.patch_pos_embed
+
+        B, N, C = x.shape
+
+        if self.cnn_pool_config is not None:
+            keep_indexes = top_pool(attn_weight, dim=C, **self.cnn_pool_config)
+            if keep_indexes is not None:
+                x = x.gather(dim=1, index=keep_indexes)
+        cls_tokens = self.cls_token.expand(B, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
+
+        cls_tokens = cls_tokens + self.cls_pos_embed
+
+        x = torch.cat((cls_tokens, x), dim=1)
+
+        for blk in self.blocks:
+            x = blk(x)
+        x = self.norm(x)  # (B, N, dim)
+        if os.environ.get('DEBUG_MODE', '0') == '1':
+            print('output', x.shape)
+        x = x[:, 0]
+        if self.sum_batch_mean:
+            x = x + x.mean(dim=0) * self.alpha
+        loss = dict()
+        return x, loss, attn_map
