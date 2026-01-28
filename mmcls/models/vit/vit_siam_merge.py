@@ -1295,14 +1295,16 @@ class DeFPNViTV7(BaseBackbone):
 
 @BACKBONES.register_module()
 class StudentPoolingViT(PoolingViT):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, use_kd=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.use_kd = use_kd
 
-    def forward_features(self, x):
+    def forward_features(self, x, tchr_attn_map=None):
         """
-        Currently: copy-paste from PoolingViT forward teachers.
-        :param x:
-        :return:
+        Based on PoolingViT forward teachers.
+        Changes:
+            * Optional arg: tchr_attn_map - CNN attention-map from teacher model.
+            * Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
         """
         assert len(x) == 1, '目前只支持1个 stage'
         assert isinstance(x, list) or isinstance(x, tuple)
@@ -1325,7 +1327,10 @@ class StudentPoolingViT(PoolingViT):
         # disable the first row and columns
         # attn_map[:, :, 0, :] = 0.
         # attn_map[:, :, :, 0] = 0.
-        attn_weight = attn_map.flatten(2).transpose(2, 1)
+        if self.use_kd:
+            attn_weight = tchr_attn_map.flatten(2).transpose(2, 1)
+        else:
+            attn_weight = attn_map.flatten(2).transpose(2, 1)
 
         # attn_weight = torch.rand(attn_weight.shape, device=attn_weight.device)
 
@@ -1355,6 +1360,9 @@ class StudentPoolingViT(PoolingViT):
         loss = dict()
         return x, loss, attn_map
 
-    def forward(self, x, **kwargs):
-        x, loss, attn_map = self.forward_features(x)
+    def forward(self, x, tchr_attn_map=None, **kwargs):
+        if self.use_kd:
+            x, loss, attn_map = self.forward_features(x, tchr_attn_map)
+        else:
+            x, loss, attn_map = self.forward_features(x)
         return dict(x=x, loss=dict(VitDiv_loss=loss), attn_map=attn_map)
