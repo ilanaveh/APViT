@@ -68,6 +68,7 @@ def parse_args():
 
     return args
 
+
 def main():
     args = parse_args()
     print(args)
@@ -135,9 +136,17 @@ def main():
     cfg.seed = args.seed
     meta['seed'] = args.seed
 
-    model = build_classifier(cfg.model)
+    tchr_model = build_classifier(cfg.tchr_model)
+    tchr_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(tchr_model)
+    tchr_model.eval()
 
+    cfg.model['tchr_model'] = tchr_model
+
+    model = build_classifier(cfg.model)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+
+    # remove tchr_model from cfg, to avoid later problems (e.g. when using pretty_text):
+    tchr_model = cfg.model.pop('tchr_model')
 
     # for name, param in model.named_parameters():
     #     print(name)
