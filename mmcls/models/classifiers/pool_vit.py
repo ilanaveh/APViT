@@ -218,13 +218,23 @@ class PoolingVitClassifier(BaseClassifier):
 
 
 @CLASSIFIERS.register_module()
-class PoolingViTClassifierKD(PoolingVitClassifier):
+class PoolingVitClassifierKD(PoolingVitClassifier):
     def __init__(self, *args, **kargs):
+        if 'tchr_model' in kargs:
+            use_kd = True
+            tchr_model = kargs.pop('tchr_model')
         super().__init__(*args, **kargs)
+        if use_kd:
+            self.tchr_model = tchr_model
 
-    def extract_feat(self, img):
+    def extract_feat(self, img, tchr_img=None):
         """
-        Currently: copy-paste from PoolingVitClassifier extract_feat.
+        Based on PoolingVitClassifier extract_feat.
+        Changes:
+            Add optional arg - tchr_img
+            If tchr_img given then:
+                - compute tchr_attn_map
+                - pass it to self.vit.
         """
         aux_loss = dict()
         if hasattr(self, 'extractor'):
@@ -235,6 +245,9 @@ class PoolingViTClassifierKD(PoolingVitClassifier):
             x = self.convert(x)
         else:
             x = dict(x=x)
+        if tchr_img is not None:
+            # ToDo: add validation that there is tchr_model.
+            x['tchr_attn_map'] = self.tchr_model.extract_attn_map(tchr_img)
         x = self.vit(**x)
         if isinstance(x, dict):
             aux_loss.update(x['loss'])
@@ -244,9 +257,12 @@ class PoolingViTClassifierKD(PoolingVitClassifier):
         return x, aux_loss
 
     def forward_train(self, img, gt_label, au_label=None, **kwargs):
-        """Currently: copy-paste from PoolingVitClassifier forward_train.
         """
-        x, aux_loss = self.extract_feat(img)
+        Based on PoolingVitClassifier forward_train.
+        Changes:
+            - Add **kwargs to self.extract_feat(), so that if tchr_img is given, it's passed forward.
+        """
+        x, aux_loss = self.extract_feat(img, **kwargs)
 
         if au_label is None:
             losses = self.head.forward_train(x, gt_label)
