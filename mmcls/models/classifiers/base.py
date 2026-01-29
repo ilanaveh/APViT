@@ -147,7 +147,15 @@ class BaseClassifier(nn.Module, metaclass=ABCMeta):
                 DDP, it means the batch size on each GPU), which is used for
                 averaging the logs.
         """
-        losses = self(**data)
+        if isinstance(data, list):
+            # This is the case when tchr_img is passed (in addiotion to original sample). Controlled by:
+            # APViT.mmcls.datasets.base_dataset.BaseDataset.prepare_data, according to boolean self.get_tchr_sample
+            # which is set by cfg file in configs._base_.datasets (True in 'RAF_kd).
+            data[0]['tchr_img'] = data[1]['img']  # add teacher image to data.
+            data = data[0]
+            losses = self(**data)
+        else:
+            losses = self(**data)
         loss, log_vars = self._parse_losses(losses)
 
         outputs = dict(
