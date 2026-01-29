@@ -11,6 +11,16 @@ from mmcls.models.losses import accuracy, f1_score, precision, recall
 from mmcls.models.losses.eval_metrics import class_accuracy
 from .pipelines import Compose
 
+# for validating transform_tchr:
+from .pipelines import LoadImageFromFile
+from .pipelines import RandomRotate
+
+# For setting seed (for adding distillation):
+import random
+import torch
+
+from PIL import ImageFilter  # for GaussianBlur
+
 
 class BaseDataset(Dataset, metaclass=ABCMeta):
     """Base dataset.
@@ -32,7 +42,8 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
                  pipeline,
                  classes=None,
                  ann_file=None,
-                 test_mode=False):
+                 test_mode=False,
+                 get_tchr_sample=False):
         super(BaseDataset, self).__init__()
 
         self.ann_file = ann_file
@@ -44,6 +55,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         self.CLASSES = self.get_classes(classes)
         if os.environ.get('DEBUG_MODE', '0') == '1':
             self.data_infos = self.data_infos[:30]
+        self.get_tchr_sample = get_tchr_sample
 
     @abstractmethod
     def load_annotations(self):
@@ -87,6 +99,23 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
 
     def prepare_data(self, idx):
         results = copy.deepcopy(self.data_infos[idx])
+
+        blur_in_transforms = isinstance(self.pipeline.transforms[1], GaussianBlur)
+
+        seed = torch.randint(0, 1000000, (1,)).item()
+        # Get sample_tchr (without blur transform):
+        if self.get_tchr_sample:
+            # remove blur transform:
+            transform_tchr = Compose([self.pipeline.transforms[0]] + self.pipeline.transforms[2:]) \
+                if blur_in_transforms else self.pipeline
+            assert isinstance(transform_tchr.transforms[0], LoadImageFromFile)
+            assert isinstance(transform_tchr.transforms[1], RandomRotate)
+            # Set seed, so teacher and student samples would go through same transforms:
+            set_seed(seed)
+            # apply transforms to sample:
+            sample_tchr = transform_tchr(results)
+            set_seed(seed)
+            return self.pipeline(results), sample_tchr
         return self.pipeline(results)
 
     def __len__(self):
@@ -183,3 +212,47 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
                 eval_result = dict()
             eval_results.update(eval_result)
         return eval_results
+
+
+def set_seed(seed):
+    """
+    Sets seeds for all relevant random number generators.
+    Copied from: Transformers/deit/datasets.py.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
+class GaussianBlur(object):
+    """
+    Apply Gaussian blur filter with the given sigma to the input PIL Image.
+    Args:
+        sigma (int): Desired Gaussian blur level sigma
+    Taken from: W:\dannyh\work\code\PyTorch\vggface2_lookdir\datasets\custom_transforms.
+   """
+
+    def __init__(self, sigma):
+        assert isinstance(sigma, int)
+        self.sigma = sigma
+
+    def __call__(self, img):
+        """
+        Args:
+            img (PIL Image): Image to be scaled.
+        Returns:
+            PIL Image: Rescaled image.
+        """
+        img = img.filter(ImageFilter.GaussianBlur(
+            radius=self.sigma))
+
+        return img
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(sigma={0})'.format(self.sigma)
+
