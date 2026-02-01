@@ -1320,6 +1320,8 @@ class StudentPoolingViT(PoolingViT):
         # x = x[0]
         B, C, H, W = x[-1].shape
         attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+        # ToDo: tchr_attn_map & attn_map are very similar but not identical -- why?
+        #  (when teacher & student model are the same and no blur is used for either).
         if self.attn_method == 'LA':
             x[-1] = x[-1] * attn_map  # to have gradient
         x = [i.flatten(2).transpose(2, 1) for i in x]
