@@ -324,6 +324,7 @@ class PoolingViT(BaseBackbone):
                  vit_pool_configs=None,
                  multi_head_fusion=False,
                  sum_batch_mean=False,
+                 attn_before_proj=False,
                  **kwargs):
         super().__init__()
         if kwargs:
@@ -401,6 +402,8 @@ class PoolingViT(BaseBackbone):
         if freeze:
             self.apply(self._freeze_weights)
 
+        self.attn_before_proj = attn_before_proj
+
     def init_weights(self, pretrained, patch_num=0):
         logger = get_root_logger()
         logger.warning(f'{self.__class__.__name__} load pretrain from {pretrained}')
@@ -469,10 +472,18 @@ class PoolingViT(BaseBackbone):
         if os.getenv('DEBUG_MODE') == '1':
             print(x[0].shape)
 
-        x = [self.projs[i](x[i]) for i in range(len(x))]
+        if self.attn_before_proj:
+            print("Attention-map computed BEFORE applying 'projs'")
+            attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+            x = [self.projs[i](x[i]) for i in range(len(x))]
+        else:
+            print("Attention-map computed AFTER applying 'projs' (original)")
+            x = [self.projs[i](x[i]) for i in range(len(x))]
+            attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+
         # x = x[0]
         B, C, H, W = x[-1].shape
-        attn_map = self.attn_f(x[-1]) # [B, 1, H, W]
+
         if self.attn_method == 'LA':
             x[-1] = x[-1] * attn_map    #  to have gradient
         x = [i.flatten(2).transpose(2, 1) for i in x]
@@ -1316,12 +1327,18 @@ class StudentPoolingViT(PoolingViT):
         if os.getenv('DEBUG_MODE') == '1':
             print(x[0].shape)
 
-        x = [self.projs[i](x[i]) for i in range(len(x))]
+        if self.attn_before_proj:
+            print("Attention-map computed BEFORE applying 'projs'")
+            attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+            x = [self.projs[i](x[i]) for i in range(len(x))]
+        else:
+            print("Attention-map computed AFTER applying 'projs' (original)")
+            x = [self.projs[i](x[i]) for i in range(len(x))]
+            attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
+
         # x = x[0]
         B, C, H, W = x[-1].shape
-        attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
-        # ToDo: tchr_attn_map & attn_map are very similar but not identical -- why?
-        #  (when teacher & student model are the same and no blur is used for either).
+
         if self.attn_method == 'LA':
             x[-1] = x[-1] * attn_map  # to have gradient
         x = [i.flatten(2).transpose(2, 1) for i in x]
