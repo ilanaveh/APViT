@@ -96,20 +96,50 @@ class PoolingBlock(nn.Module):
         return x
 
 
+class StudentPoolingBlock(PoolingBlock):
+    """
+    Based on PoolingBlock.
+    Used for incorporating option for distillation.
+    Changes:
+        * init, self.attn = StudentPoolingAttention (instead of PoolingAttention).
+        * forward: add tchr_attn_map as optional input, and pass it to self.attn.
+    """
+
+    def __init__(self, dim=0, num_heads=0, qkv_bias=False, qk_scale=None, drop=0., attn_drop=0., pool_config=None,
+                 *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.attn = StudentPoolingAttention(
+            dim, num_heads=num_heads, qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop,
+            pool_config=pool_config)
+
+    def forward(self, x, tchr_attn_map=None):
+        feature, keep_index = self.attn(self.norm1(x), tchr_attn_map)
+        x = x + self.drop_path(feature)
+        if keep_index is not None:
+            if len(keep_index) != x.shape[1]:
+                x = x.gather(dim=1, index=keep_index)
+        x = x + self.drop_path(self.mlp(self.norm2(x)))
+        return x
+
+
 class StudentPoolingAttention(PoolingAttention):
     """
     Based on PoolingAttention.
-    Used logic similar to 'StudentPoolingViT' (in vit_siam_merge) for incorporating option for distillation:
+    Use logic similar to 'StudentPoolingViT' (in vit_siam_merge) for incorporating option for distillation:
         1. Add use_kd to init.
-        2.
+        2. Modify forward to allow using tchr_attn_map for pooling.
     """
     def __init__(self, use_kd=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.use_kd = use_kd
 
-    def forward(self, x):
+    def forward(self, x, tchr_attn_map=None):
         """
-        Currently, copy-paste from PoolingAttention forward (only removed additions for attention-visualization).
+        Bosed on PoolingAttention forward.
+        Changes (Same logic as 'StudentPoolingViT' (in vit_siam_merge) ):
+            1. [Removed additions for attention-visualization).]
+            2. Optional arg: tchr_attn_map - CNN attention-map from teacher model.
+            3. Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
         """
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads)
@@ -119,15 +149,19 @@ class StudentPoolingAttention(PoolingAttention):
         attn = (q @ k.transpose(-2, -1)) * self.scale   # [B, head_num, token_num, token_num]
 
         if self.pool_config:
+            if self.use_kd:
+                attn_for_pool = tchr_attn_map
+            else:
+                attn_for_pool = attn
             attn_method = self.pool_config.get('attn_method')
             if attn_method == 'SUM_ABS_1':
-                attn_weight = attn[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
+                attn_weight = attn_for_pool[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
                 attn_weight = torch.sum(torch.abs(attn_weight), dim=-1).unsqueeze(-1)
             elif attn_method == 'SUM':
-                attn_weight = attn[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
+                attn_weight = attn_for_pool[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
                 attn_weight = torch.sum(attn_weight, dim=-1).unsqueeze(-1)
             elif attn_method == 'MAX':
-                attn_weight = attn[:, :, 0, :].transpose(-1, -2)
+                attn_weight = attn_for_pool[:, :, 0, :].transpose(-1, -2)
                 attn_weight = torch.max(attn_weight, dim=-1)[0].unsqueeze(-1)
             else:
                 raise ValueError('Invalid attn_method: %s' % attn_method)
