@@ -94,3 +94,53 @@ class PoolingBlock(nn.Module):
 
         x = x + self.drop_path(self.mlp(self.norm2(x)))
         return x
+
+
+class StudentPoolingAttention(PoolingAttention):
+    """
+    Based on PoolingAttention.
+    Used logic similar to 'StudentPoolingViT' (in vit_siam_merge) for incorporating option for distillation:
+        1. Add use_kd to init.
+        2.
+    """
+    def __init__(self, use_kd=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.use_kd = use_kd
+
+    def forward(self, x):
+        """
+        Currently, copy-paste from PoolingAttention forward (only removed additions for attention-visualization).
+        """
+        B, N, C = x.shape
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads)
+        qkv = qkv.permute(2, 0, 3, 1, 4)
+        q, k, v = qkv[0], qkv[1], qkv[2]   # make torchscript happy (cannot use tensor as tuple)
+
+        attn = (q @ k.transpose(-2, -1)) * self.scale   # [B, head_num, token_num, token_num]
+
+        if self.pool_config:
+            attn_method = self.pool_config.get('attn_method')
+            if attn_method == 'SUM_ABS_1':
+                attn_weight = attn[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
+                attn_weight = torch.sum(torch.abs(attn_weight), dim=-1).unsqueeze(-1)
+            elif attn_method == 'SUM':
+                attn_weight = attn[:, :, 0, :].transpose(-1, -2)    # [B, token_num, head_num]
+                attn_weight = torch.sum(attn_weight, dim=-1).unsqueeze(-1)
+            elif attn_method == 'MAX':
+                attn_weight = attn[:, :, 0, :].transpose(-1, -2)
+                attn_weight = torch.max(attn_weight, dim=-1)[0].unsqueeze(-1)
+            else:
+                raise ValueError('Invalid attn_method: %s' % attn_method)
+
+            # attn_weight = torch.rand(attn_weight.shape, device=attn_weight.device)
+            keep_index = top_pool(attn_weight, dim=self.dim, **self.pool_config)
+        else:
+            keep_index = None
+
+        attn = attn.softmax(dim=-1)
+        attn = self.attn_drop(attn)
+
+        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        return x, keep_index
