@@ -1316,7 +1316,7 @@ class StudentPoolingViT(PoolingViT):
 
     def forward_features(self, x, tchr_attn_map=None):
         """
-        Based on PoolingViT forward teachers.
+        Based on PoolingViT forward features.
         Changes:
             * Optional arg: tchr_attn_map - CNN attention-map from teacher model.
             * Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
