@@ -25,7 +25,7 @@ from ..backbones.base_backbone import BaseBackbone
 from .layers import DropPath, to_2tuple, trunc_normal_, resize_pos_embed_v2
 from ..utils import top_pool
 from ..backbones.modules.vit import Block
-from ..backbones.modules.vit_pooling import PoolingBlock
+from ..backbones.modules.vit_pooling import PoolingBlock, StudentPoolingBlock
 
 
 @BACKBONES.register_module()
@@ -1310,12 +1310,29 @@ class DeFPNViTV7(BaseBackbone):
 
 @BACKBONES.register_module()
 class StudentPoolingViT(PoolingViT):
-    def __init__(self, use_kd=False, *args, **kwargs):
+    # ToDo: Currenly, only one flag determines if KD is used for CNN AND Transformer attention. Need to split this.
+    def __init__(self, embed_dim=768, depth=12,
+                 num_heads=12, mlp_ratio=4., qkv_bias=False, qk_scale=None, drop_rate=0., drop_path_rate=0.,
+                 attn_drop_rate=0., norm_layer_eps=1e-5, vit_pool_configs=None, use_kd=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.use_kd = use_kd
+
+        if self.use_kd:
+            vit_keep_rates = vit_pool_configs['keep_rates']
+            dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
+            norm_layer = partial(nn.LayerNorm, eps=norm_layer_eps)
+            self.blocks = nn.ModuleList([
+                StudentPoolingBlock(
+                    dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
+                    drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
+                    pool_config=dict(keep_rate=vit_keep_rates[i], **vit_pool_configs),
+                )
+                for i in range(depth)])
 
     def forward_features(self, x, tchr_attn_map=None):
         """
+        ToDo: Add transformer_tchr_attn_map as optional arg (and change tchr_attn_map to cnn_tchr_attn_map).
         Based on PoolingViT forward features.
         Changes:
             * Optional arg: tchr_attn_map - CNN attention-map from teacher model.
@@ -1373,7 +1390,7 @@ class StudentPoolingViT(PoolingViT):
         x = torch.cat((cls_tokens, x), dim=1)
 
         for blk in self.blocks:
-            x = blk(x)
+            x = blk(x)  # ToDo: Add transformer_tchr_attn_map if use_kd.
         x = self.norm(x)  # (B, N, dim)
         if os.environ.get('DEBUG_MODE', '0') == '1':
             print('output', x.shape)
