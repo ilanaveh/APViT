@@ -138,7 +138,7 @@ class StudentPoolingAttention(PoolingAttention):
         Bosed on PoolingAttention forward.
         Changes (Same logic as 'StudentPoolingViT' (in vit_siam_merge) ):
             1. [Removed additions for attention-visualization).]
-            2. Optional arg: tchr_attn_map - CNN attention-map from teacher model.
+            2. Optional arg: tchr_attn_map - Transformer attention-map from teacher model.
             3. Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
         """
         B, N, C = x.shape
