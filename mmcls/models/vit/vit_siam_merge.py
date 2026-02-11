@@ -1330,13 +1330,13 @@ class StudentPoolingViT(PoolingViT):
                 )
                 for i in range(depth)])
 
-    def forward_features(self, x, tchr_attn_map=None):
+    def forward_features(self, x, tchr_attn_map_cnn=None, tchr_attn_map_vit=None):
         """
-        ToDo: Add transformer_tchr_attn_map as optional arg (and change tchr_attn_map to cnn_tchr_attn_map).
         Based on PoolingViT forward features.
         Changes:
-            * Optional arg: tchr_attn_map - CNN attention-map from teacher model.
-            * Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
+            * Optional args: tchr_attn_map_cnn, tchr_attn_map_vit - CNN/vit attention-map from teacher model.
+            * Use tchr_attn_map_cnn for creating attn_weight, if self.use_kd = True.
+            * Pass tchr_attn_map_vit to blocks, if self.use_kd = True.
         """
         assert len(x) == 1, '目前只支持1个 stage'
         assert isinstance(x, list) or isinstance(x, tuple)
@@ -1368,7 +1368,7 @@ class StudentPoolingViT(PoolingViT):
         # attn_map[:, :, 0, :] = 0.
         # attn_map[:, :, :, 0] = 0.
         if self.use_kd:
-            attn_weight = tchr_attn_map.flatten(2).transpose(2, 1)
+            attn_weight = tchr_attn_map_cnn.flatten(2).transpose(2, 1)
         else:
             attn_weight = attn_map.flatten(2).transpose(2, 1)
 
@@ -1390,7 +1390,10 @@ class StudentPoolingViT(PoolingViT):
         x = torch.cat((cls_tokens, x), dim=1)
 
         for blk in self.blocks:
-            x = blk(x)  # ToDo: Add transformer_tchr_attn_map if use_kd.
+            if self.use_kd:
+                x = blk(x, tchr_attn_map_vit)  # ToDo: Pass attn of specific block (according to how it's saved)
+            else:
+                x = blk(x)
         x = self.norm(x)  # (B, N, dim)
         if os.environ.get('DEBUG_MODE', '0') == '1':
             print('output', x.shape)
@@ -1400,9 +1403,9 @@ class StudentPoolingViT(PoolingViT):
         loss = dict()
         return x, loss, attn_map
 
-    def forward(self, x, tchr_attn_map=None, **kwargs):
+    def forward(self, x, tchr_attn_map_cnn=None, tchr_attn_map_vit=None, **kwargs):
         if self.use_kd:
-            x, loss, attn_map = self.forward_features(x, tchr_attn_map)
+            x, loss, attn_map = self.forward_features(x, tchr_attn_map_cnn, tchr_attn_map_vit)
         else:
             x, loss, attn_map = self.forward_features(x)
         return dict(x=x, loss=dict(VitDiv_loss=loss), attn_map=attn_map)
