@@ -133,13 +133,13 @@ class StudentPoolingAttention(PoolingAttention):
         super().__init__(*args, **kwargs)
         self.use_kd = use_kd
 
-    def forward(self, x, tchr_attn_map=None):
+    def forward(self, x, tchr_attn_map_vit=None):
         """
         Bosed on PoolingAttention forward.
         Changes (Same logic as 'StudentPoolingViT' (in vit_siam_merge) ):
             1. [Removed additions for attention-visualization).]
-            2. Optional arg: tchr_attn_map - Transformer attention-map from teacher model.
-            3. Use tchr_attn_map for creating attn_weight, if self.use_kd = True.
+            2. Optional arg: tchr_attn_map_vit - Transformer attention-map from teacher model.
+            3. Use tchr_attn_map_vit for creating attn_weight, if self.use_kd = True.
         """
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads)
@@ -150,7 +150,7 @@ class StudentPoolingAttention(PoolingAttention):
 
         if self.pool_config:
             if self.use_kd:
-                attn_for_pool = tchr_attn_map
+                attn_for_pool = tchr_attn_map_vit
             else:
                 attn_for_pool = attn
             attn_method = self.pool_config.get('attn_method')
