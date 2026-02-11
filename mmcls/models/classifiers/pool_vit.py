@@ -247,7 +247,19 @@ class PoolingVitClassifierKD(PoolingVitClassifier):
             x = dict(x=x)
         if tchr_img is not None:
             # ToDo: add validation that there is tchr_model.
-            x['tchr_attn_map'] = self.tchr_model.extract_attn_map(tchr_img)
+            # Compute teacher attention maps:
+            # ViT:
+            x = x['x']
+            B, N, C = x.shape
+            qkv = self.tchr_model.qkv(x).reshape(B, N, 3, self.tchr_model.num_heads, C // self.tchr_model.num_heads)
+            qkv = qkv.permute(2, 0, 3, 1, 4)
+            q, k, v = qkv[0], qkv[1], qkv[2]  # make torchscript happy (cannot use tensor as tuple)
+            # ToDo: make sure x is not affected by the attention calculation.
+            x = dict(x=x)
+            x['tchr_attn_map_vit'] = (q @ k.transpose(-2, -1)) * self.scale  # [B, head_num, token_num, token_num]
+            # CNN:
+            x['tchr_attn_map_cnn'] = self.tchr_model.extract_attn_map(tchr_img)
+
         x = self.vit(**x)
         if isinstance(x, dict):
             aux_loss.update(x['loss'])
@@ -274,3 +286,16 @@ class PoolingVitClassifierKD(PoolingVitClassifier):
         losses.update(aux_loss)
 
         return losses
+
+    def extract_attn_map_cnn_and_vit(self, img):
+        # This part is based on extract_attn_map():
+        if hasattr(self, 'extractor'):
+            x = self.extractor(img)
+        else:
+            x = img
+        if hasattr(self, 'convert'):
+            x = self.convert(x)
+        else:
+            x = dict(x=x)
+        x = self.vit(**x)
+        return x['attn_map']
