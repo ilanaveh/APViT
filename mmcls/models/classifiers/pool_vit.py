@@ -90,6 +90,39 @@ class PoolingVitClassifier(BaseClassifier):
         x = self.vit(**x)
         return x['attn_map']
 
+    def extract_attn_cnn_and_vit(self, img):
+        # For getting vit attention, add hooks (assumes 'self.attn_weight' property of PoolingAttention block):
+        vit_attn_weights = []
+        vit_keep_inds = []
+
+        def hook_attn_fn(module, input, output):
+            vit_attn_weights.append(module.attn_weight.cpu())
+
+        def hook_keep_ind_fn(module, input, output):
+            if module.keep_index is not None:
+                vit_keep_inds.append(module.keep_index.cpu())
+            else:
+                vit_keep_inds.append(module.keep_index)
+
+        for block in self.vit.blocks:
+            block.attn.register_forward_hook(hook_attn_fn)
+            block.attn.register_forward_hook(hook_keep_ind_fn)
+
+        # This part is based on extract_attn_map():
+        if hasattr(self, 'extractor'):
+            x = self.extractor(img)
+        else:
+            x = img
+        if hasattr(self, 'convert'):
+            x = self.convert(x)
+        else:
+            x = dict(x=x)
+
+        # Forward pass in vit -- cnn_attn_map is one of the return values, and vit attention weights should be hooked:
+        x = self.vit(**x)
+
+        return {'cnn': x['attn_map'], 'vit': {'weights': vit_attn_weights, 'keep_ind': vit_keep_inds}}
+
     def forward_train(self, img, gt_label, au_label=None, **kwargs):
         """Forward computation during training.
 
@@ -248,17 +281,9 @@ class PoolingVitClassifierKD(PoolingVitClassifier):
         if tchr_img is not None:
             # ToDo: add validation that there is tchr_model.
             # Compute teacher attention maps:
-            # ViT:
-            x = x['x']
-            B, N, C = x.shape
-            qkv = self.tchr_model.qkv(x).reshape(B, N, 3, self.tchr_model.num_heads, C // self.tchr_model.num_heads)
-            qkv = qkv.permute(2, 0, 3, 1, 4)
-            q, k, v = qkv[0], qkv[1], qkv[2]  # make torchscript happy (cannot use tensor as tuple)
-            # ToDo: make sure x is not affected by the attention calculation.
-            x = dict(x=x)
-            x['tchr_attn_map_vit'] = (q @ k.transpose(-2, -1)) * self.scale  # [B, head_num, token_num, token_num]
-            # CNN:
-            x['tchr_attn_map_cnn'] = self.tchr_model.extract_attn_map(tchr_img)
+            tchr_attns = self.tchr_model.extract_attn_cnn_and_vit(tchr_img)
+            x['tchr_attn_map_cnn'] = tchr_attns['cnn']
+            x['tchr_attn_vit'] = tchr_attns['vit']
 
         x = self.vit(**x)
         if isinstance(x, dict):
@@ -286,16 +311,3 @@ class PoolingVitClassifierKD(PoolingVitClassifier):
         losses.update(aux_loss)
 
         return losses
-
-    def extract_attn_map_cnn_and_vit(self, img):
-        # This part is based on extract_attn_map():
-        if hasattr(self, 'extractor'):
-            x = self.extractor(img)
-        else:
-            x = img
-        if hasattr(self, 'convert'):
-            x = self.convert(x)
-        else:
-            x = dict(x=x)
-        x = self.vit(**x)
-        return x['attn_map']
