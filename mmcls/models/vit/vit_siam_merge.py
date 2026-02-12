@@ -477,11 +477,9 @@ class PoolingViT(BaseBackbone):
             print(x[0].shape)
 
         if self.attn_before_proj:
-            # print("Attention-map computed BEFORE applying 'projs'")
             attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
             x = [self.projs[i](x[i]) for i in range(len(x))]
         else:
-            # print("Attention-map computed AFTER applying 'projs' (original)")
             x = [self.projs[i](x[i]) for i in range(len(x))]
             attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
 
@@ -1324,19 +1322,20 @@ class StudentPoolingViT(PoolingViT):
             norm_layer = partial(nn.LayerNorm, eps=norm_layer_eps)
             self.blocks = nn.ModuleList([
                 StudentPoolingBlock(
+                    use_kd=use_kd,
                     dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
                     drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
                     pool_config=dict(keep_rate=vit_keep_rates[i], **vit_pool_configs),
                 )
                 for i in range(depth)])
 
-    def forward_features(self, x, tchr_attn_map_cnn=None, tchr_attn_map_vit=None):
+    def forward_features(self, x, tchr_attn_map_cnn=None, tchr_attn_weights_vit=None, tchr_keep_index_vit=None):
         """
         Based on PoolingViT forward features.
         Changes:
-            * Optional args: tchr_attn_map_cnn, tchr_attn_map_vit - CNN/vit attention-map from teacher model.
+            * Optional args: tchr_attn_map_cnn, tchr_attn_weights_vit - CNN attn-map / vit attn-weights from teacher.
             * Use tchr_attn_map_cnn for creating attn_weight, if self.use_kd = True.
-            * Pass tchr_attn_map_vit to blocks, if self.use_kd = True.
+            * Pass tchr_attn_weights_vit, tchr_keep_index_vit to blocks, if self.use_kd = True.
         """
         assert len(x) == 1, '目前只支持1个 stage'
         assert isinstance(x, list) or isinstance(x, tuple)
@@ -1389,9 +1388,9 @@ class StudentPoolingViT(PoolingViT):
 
         x = torch.cat((cls_tokens, x), dim=1)
 
-        for blk in self.blocks:
+        for i, blk in enumerate(self.blocks):
             if self.use_kd:
-                x = blk(x, tchr_attn_map_vit)  # ToDo: Pass attn of specific block (according to how it's saved)
+                x = blk(x, tchr_attn_weights_vit[i], tchr_keep_index_vit[i])
             else:
                 x = blk(x)
         x = self.norm(x)  # (B, N, dim)
@@ -1403,9 +1402,11 @@ class StudentPoolingViT(PoolingViT):
         loss = dict()
         return x, loss, attn_map
 
-    def forward(self, x, tchr_attn_map_cnn=None, tchr_attn_map_vit=None, **kwargs):
+    def forward(self, x, tchr_attn_map_cnn=None, tchr_attn_vit=None, **kwargs):
         if self.use_kd:
-            x, loss, attn_map = self.forward_features(x, tchr_attn_map_cnn, tchr_attn_map_vit)
+            tchr_attn_weights_vit = tchr_attn_vit['weights']
+            keep_index_vit = tchr_attn_vit['keep_ind']
+            x, loss, attn_map = self.forward_features(x, tchr_attn_map_cnn, tchr_attn_weights_vit, keep_index_vit)
         else:
             x, loss, attn_map = self.forward_features(x)
         return dict(x=x, loss=dict(VitDiv_loss=loss), attn_map=attn_map)
