@@ -265,6 +265,8 @@ class IRSE(BaseBackbone):
         state_dict = torch.load(pretrained, map_location='cpu')
         if 'state_dict' in state_dict:
             state_dict = state_dict['state_dict']
+        elif 'backbone_state_dict' in state_dict:
+            state_dict = state_dict['backbone_state_dict']
 
         stage_unit_nums = {
             34: (3, 4, 6, 3),
