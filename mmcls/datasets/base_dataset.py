@@ -107,16 +107,17 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         # Get sample_tchr (without blur transform):
         if self.get_tchr_sample:
             # remove blur transform:
-            transform_tchr = Compose([self.pipeline.transforms[0]] + self.pipeline.transforms[2:]) \
+            transform_tchr = Compose([self.pipeline.transforms[0]] + [Dummy_Random()] + self.pipeline.transforms[2:]) \
                 if blur_in_transforms else self.pipeline
             assert isinstance(transform_tchr.transforms[0], LoadImageFromFile)
-            assert isinstance(transform_tchr.transforms[1], RandomRotate)
+            assert isinstance(transform_tchr.transforms[2], RandomRotate)  # ToDo: this is not the case if blur_in_transforms=False (then - transform_tchr.transforms[1] is RandomRotate) -- need to djust assertion.
             # Set seed, so teacher and student samples would go through same transforms:
             set_seed(seed)
             # apply transforms to sample:
             sample_tchr = transform_tchr(results)
             set_seed(seed)
-            return self.pipeline(results), sample_tchr
+            sample_stud = self.pipeline(results)
+            return sample_stud, sample_tchr
         return self.pipeline(results)
 
     def __len__(self):
@@ -228,3 +229,24 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+
+class Dummy_Random(object):
+    """
+    For solving the misalignment in randomness of the student & teacher transforms, add a dummy transform to teacher
+    (instead of the GaussianBlur).
+   """
+
+    def __init__(self):
+        pass
+
+    def __call__(self, img):
+        """
+        Args:
+            img (PIL Image).
+        Returns:
+            PIL Image: same as input.
+        """
+        np.random.uniform(1, 2)
+
+        return img
