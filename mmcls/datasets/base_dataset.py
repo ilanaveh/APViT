@@ -19,7 +19,8 @@ from .pipelines import RandomRotate
 import random
 import torch
 
-from PIL import ImageFilter  # for GaussianBlur
+# from PIL import ImageFilter  # for GaussianBlur
+from mmcls.datasets.pipelines.transforms import GaussianBlur
 
 
 class BaseDataset(Dataset, metaclass=ABCMeta):
@@ -227,32 +228,3 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-
-
-class GaussianBlur(object):
-    """
-    Apply Gaussian blur filter with the given sigma to the input PIL Image.
-    Args:
-        sigma (int): Desired Gaussian blur level sigma
-    Taken from: W:\dannyh\work\code\PyTorch\vggface2_lookdir\datasets\custom_transforms.
-   """
-
-    def __init__(self, sigma):
-        assert isinstance(sigma, int)
-        self.sigma = sigma
-
-    def __call__(self, img):
-        """
-        Args:
-            img (PIL Image): Image to be scaled.
-        Returns:
-            PIL Image: Rescaled image.
-        """
-        img = img.filter(ImageFilter.GaussianBlur(
-            radius=self.sigma))
-
-        return img
-
-    def __repr__(self):
-        return self.__class__.__name__ + '(sigma={0})'.format(self.sigma)
-
