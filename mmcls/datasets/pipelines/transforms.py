@@ -662,6 +662,9 @@ class GaussianBlur(object):
     def __init__(self, sigma_min, sigma_max):
         self.sigma_min = sigma_min
         self.sigma_max = sigma_max
+        print_sigma = f"{self.sigma_min} - {self.sigma_max}" \
+            if (self.sigma_min != self.sigma_max) else f"{self.sigma_min}"
+        print(f"Using blur with sigma {print_sigma}.")
 
     def __call__(self, results):
         for key in results.get('img_fields', ['img']):
@@ -669,7 +672,7 @@ class GaussianBlur(object):
             sigma = np.random.uniform(self.sigma_min, self.sigma_max)
             img = Image.fromarray(img)
             img = img.filter(ImageFilter.GaussianBlur(radius=sigma))
-            results[key] = np.array(img).astype('float32')
+            results[key] = np.array(img)
         return results
 
     def __repr__(self):
