@@ -77,14 +77,32 @@ def main():
 
     suf = f'_{args.suf}' if bool(args.suf) else ''
 
+    model_name = osp.splitext(osp.basename(args.config))[0] + suf
+    print("=" * 60)
+    print(model_name)
+    print("=" * 60)
+
+    if 'pretrained' in cfg.model.extractor and bool(cfg.model.extractor.pretrained):
+        print(f"Extractor checkpoint will be loaded from: "
+              f"{cfg.model.extractor.pretrained.split('code/')[1].split('/checkpoint')[0]}")
+    else:
+        print("Extractor is not pretrained.")
+
+    if 'pretrained' in cfg.model.vit and bool(cfg.model.vit.pretrained):
+        print(f"ViT checkpoint will be loaded from: "
+              f"{cfg.model.vit.pretrained.split('code/')[1].split('/best_checkpoint')[0]}")
+    else:
+        print("ViT is not pretrained.")
+
+    print("=" * 60)
+
     # work_dir is determined in this priority: CLI > segment in file > filename
     if args.work_dir is not None:
         # update configs according to CLI args if args.work_dir is not None
         cfg.work_dir = args.work_dir
     elif cfg.get('work_dir', None) is None:
         # use config filename as default work_dir if cfg.work_dir is None
-        cfg.work_dir = osp.join('/home/projects/bagon/ilanaveh/code/Transformers/APViT/work_dirs',
-                                osp.splitext(osp.basename(args.config))[0] + suf)
+        cfg.work_dir = osp.join('/home/projects/bagon/ilanaveh/code/Transformers/APViT/work_dirs', model_name)
     if args.resume_from is not None:
         cfg.resume_from = args.resume_from
     if args.gpu_ids is not None:
