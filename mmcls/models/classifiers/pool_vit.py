@@ -96,11 +96,11 @@ class PoolingVitClassifier(BaseClassifier):
         vit_keep_inds = []
 
         def hook_attn_fn(module, input, output):
-            vit_attn_weights.append(module.attn_weight.cpu())
+            vit_attn_weights.append(module.attn_weight)
 
         def hook_keep_ind_fn(module, input, output):
             if module.keep_index is not None:
-                vit_keep_inds.append(module.keep_index.cpu())
+                vit_keep_inds.append(module.keep_index)
             else:
                 vit_keep_inds.append(module.keep_index)
 
