@@ -17,10 +17,13 @@ cfg.model.extractor.pretrained = None
 cfg.model.vit.pretrained = None
 cfg.model.vit.cnn_pool_config['keep_num'] = 160
 cfg.model.vit.vit_pool_configs['keep_rates'] = [1.] * 4 + [0.9] * 4
+cfg.model.vit.attn_before_proj = True
 
 # build the model and load checkpoint
 classifier = build_classifier(cfg.model)
-load_checkpoint(classifier, "weights/APViT_RAF-3eeecf7d.pth", map_location='cpu')
+# load_checkpoint(classifier, "weights/APViT_RAF-3eeecf7d.pth", map_location='cpu')  # official pretrained
+load_checkpoint(classifier, "work_dirs/RAF_blur8/epoch_40.pth", map_location='cpu')
+
 classifier = classifier.to("cuda")
 classifier.eval()
 
@@ -34,6 +37,7 @@ test_preprocess = Compose([
     dict(type='Collect', keys=['img',])
 ])
 
+# img = mmcv.imread('resources/test_0002_112.jpg')  # choose between 'demo.jpg' / 'test_0002_112.jpg'
 img = mmcv.imread('resources/demo.jpg')
 
 # preprocess the image
@@ -80,10 +84,10 @@ for blk in range(8):
 
     full_attn_weight = np.zeros(196)
     if blk <= 4:  # First five blocks - no need to remove additional patches:
-        full_attn_weight[current_keep_inds] = vit_attn_weights[blk].squeeze()[1:]  # remove cls token [index 0]
+        full_attn_weight[current_keep_inds] = vit_attn_weights[blk].detach().squeeze()[1:]  # remove cls token [index 0]
     else:  # Last three blocks - need to remove additional patches:
-        current_keep_inds = current_keep_inds[vit_keep_inds[blk - 1].squeeze()[1:] - 1]  # -1 since 1st was cls token.
-        full_attn_weight[current_keep_inds] = vit_attn_weights[blk].squeeze()[1:]
+        current_keep_inds = current_keep_inds[vit_keep_inds[blk - 1].detach().squeeze()[1:] - 1]  # -1 since 1st was cls token.
+        full_attn_weight[current_keep_inds] = vit_attn_weights[blk].detach().squeeze()[1:]
     attn_map = full_attn_weight.reshape([14, 14])
     att_112 = np.kron(attn_map, np.ones((8, 8), dtype=int))  # duplicate each attention value to all pixels in patch
 
