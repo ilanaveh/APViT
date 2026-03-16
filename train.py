@@ -82,6 +82,8 @@ def main():
     print(model_name)
     print("=" * 60)
 
+    print("samples_per_gpu:", cfg.data.samples_per_gpu)
+
     if 'pretrained' in cfg.model.extractor and bool(cfg.model.extractor.pretrained):
         print(f"Extractor checkpoint will be loaded from: "
               f"{cfg.model.extractor.pretrained.split('code/')[1].split('/checkpoint')[0]}")
@@ -116,6 +118,10 @@ def main():
     else:
         distributed = True
         init_dist(args.launcher, **cfg.dist_params)
+
+        local_rank = int(os.environ["LOCAL_RANK"])
+        torch.cuda.set_device(local_rank)
+
         _, world_size = get_dist_info()
         cfg.gpu_ids = range(world_size)
 
