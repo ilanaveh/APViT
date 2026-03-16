@@ -87,6 +87,8 @@ def main():
     print(model_name)
     print("=" * 60)
 
+    print("samples_per_gpu:", cfg.data.samples_per_gpu)
+
     if 'pretrained' in cfg.model.extractor and bool(cfg.model.extractor.pretrained):
         print(f"Student EXTRACTOR checkpoint will be loaded from: "
               f"{cfg.model.extractor.pretrained.split('code/')[1].split('/checkpoint')[0]}")
@@ -134,8 +136,21 @@ def main():
     else:
         distributed = True
         init_dist(args.launcher, **cfg.dist_params)
+
+        local_rank = int(os.environ["LOCAL_RANK"])
+        torch.cuda.set_device(local_rank)
+
         _, world_size = get_dist_info()
         cfg.gpu_ids = range(world_size)
+
+    print("=" * 60)
+    print("GPUs (CUDA visible devices):", torch.cuda.device_count())
+    print("Current device:", torch.cuda.current_device())
+    print("Device name:", torch.cuda.get_device_name(torch.cuda.current_device()))
+    local_rank_for_print = int(os.environ.get("LOCAL_RANK", 0))
+    world_size_for_print = int(os.environ.get("WORLD_SIZE", 1))
+    print(f"[PID {os.getpid()}] local_rank={local_rank_for_print} world_size={world_size_for_print} gpu={torch.cuda.current_device()}")
+    print("=" * 60)
 
     # create work_dir
     mmcv.mkdir_or_exist(osp.abspath(cfg.work_dir))
@@ -170,6 +185,9 @@ def main():
     tchr_model = build_classifier(cfg.tchr_model)
     tchr_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(tchr_model)
     tchr_model.eval()
+
+    for p in tchr_model.parameters():
+        p.requires_grad = False
 
     cfg.model['tchr_model'] = tchr_model
 
