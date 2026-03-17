@@ -1403,7 +1403,7 @@ class StudentPoolingViT(PoolingViT):
         return x, loss, attn_map
 
     def forward(self, x, tchr_attn_map_cnn=None, tchr_attn_vit=None, **kwargs):
-        if self.use_kd:
+        if self.use_kd and self.training:
             tchr_attn_weights_vit = tchr_attn_vit['weights']
             keep_index_vit = tchr_attn_vit['keep_ind']
             x, loss, attn_map = self.forward_features(x, tchr_attn_map_cnn, tchr_attn_weights_vit, keep_index_vit)
