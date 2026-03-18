@@ -1348,11 +1348,9 @@ class StudentPoolingViT(PoolingViT):
             print(x[0].shape)
 
         if self.attn_before_proj:
-            print("Attention-map computed BEFORE applying 'projs'")
             attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
             x = [self.projs[i](x[i]) for i in range(len(x))]
         else:
-            print("Attention-map computed AFTER applying 'projs' (original)")
             x = [self.projs[i](x[i]) for i in range(len(x))]
             attn_map = self.attn_f(x[-1])  # [B, 1, H, W]
 
