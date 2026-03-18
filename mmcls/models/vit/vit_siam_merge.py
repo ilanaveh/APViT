@@ -1364,7 +1364,7 @@ class StudentPoolingViT(PoolingViT):
         # disable the first row and columns
         # attn_map[:, :, 0, :] = 0.
         # attn_map[:, :, :, 0] = 0.
-        if self.use_kd:
+        if self.use_kd and self.training:
             attn_weight = tchr_attn_map_cnn.flatten(2).transpose(2, 1)
         else:
             attn_weight = attn_map.flatten(2).transpose(2, 1)
@@ -1387,7 +1387,7 @@ class StudentPoolingViT(PoolingViT):
         x = torch.cat((cls_tokens, x), dim=1)
 
         for i, blk in enumerate(self.blocks):
-            if self.use_kd:
+            if self.use_kd and self.training:
                 x = blk(x, tchr_attn_weights_vit[i], tchr_keep_index_vit[i])
             else:
                 x = blk(x)
