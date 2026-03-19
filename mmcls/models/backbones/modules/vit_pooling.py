@@ -155,7 +155,7 @@ class StudentPoolingAttention(PoolingAttention):
         attn = (q @ k.transpose(-2, -1)) * self.scale   # [B, head_num, token_num, token_num]
 
         if self.pool_config:
-            if self.use_kd:
+            if self.use_kd and self.training:
                 attn_weight = tchr_attn_weight_vit
             else:
                 attn_method = self.pool_config.get('attn_method')
@@ -174,7 +174,7 @@ class StudentPoolingAttention(PoolingAttention):
                 # attn_weight = torch.rand(attn_weight.shape, device=attn_weight.device)
             keep_index = top_pool(attn_weight, dim=self.dim, **self.pool_config)
 
-            if self.use_kd and keep_index is not None:
+            if self.use_kd and (keep_index is not None) and self.training:
                 assert torch.all(keep_index == tchr_keep_index)
         else:
             keep_index = None
