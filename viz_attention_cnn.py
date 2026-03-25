@@ -38,6 +38,7 @@ def parse_args():
                         help="Options:"
                              "weights/APViT_RAF-3eeecf7d.pth - official pretrained"
                              "work_dirs/RAF_blurX/epoch_40.pth - locally trained (X = 0/4/8...")
+    parser.add_argument('--blur', type=int, default=None)
 
     args = parser.parse_args()
     return args
@@ -58,14 +59,18 @@ def main():
     classifier.eval()
 
     # define the preprocess for test
-    test_preprocess = Compose([
+    trans_list = [
         dict(type='Resize', size=112),
         dict(type='Normalize',
             mean=[123.675, 116.28, 103.53],
             std=[58.395, 57.12, 57.375]),
         dict(type='ImageToTensor', keys=['img']),
         dict(type='Collect', keys=['img',])
-    ])
+    ]
+    if args.blur:
+        trans_list = [dict(type='GaussianBlur', sigma_min=args.blur, sigma_max=args.blur)] + trans_list
+
+    test_preprocess = Compose(trans_list)
 
     # img = mmcv.imread('resources/test_0002_112.jpg')
     img = mmcv.imread(args.img_pth)
