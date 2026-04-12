@@ -512,8 +512,11 @@ class PoolingViT(BaseBackbone):
 
         x = torch.cat((cls_tokens, x), dim=1)
 
+        attn_weights_all = []
         for blk in self.blocks:
-            x = blk(x)
+            x, attn_w = blk(x)
+            attn_weights_all.append(attn_w)
+
         x = self.norm(x)    # (B, N, dim)
         if os.environ.get('DEBUG_MODE', '0') == '1':
             print('output', x.shape)
@@ -521,7 +524,7 @@ class PoolingViT(BaseBackbone):
         if self.sum_batch_mean:
             x = x + x.mean(dim=0) * self.alpha
         loss = dict()
-        return x, loss, attn_map
+        return x, loss, attn_map, attn_weights_all
 
     def forward(self, x, **kwargs):
         x, loss, attn_map = self.forward_features(x)
