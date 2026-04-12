@@ -82,8 +82,6 @@ class PoolingBlock(nn.Module):
 
     def forward(self, x):
         feature, keep_index = self.attn(self.norm1(x))
-        attn_weight = self.attn.attn_weight
-
         x = x + self.drop_path(feature)
         if keep_index is not None:
             if len(keep_index) != x.shape[1]:
@@ -95,7 +93,7 @@ class PoolingBlock(nn.Module):
                 # assert torch.all(torch.eq(quick_x, x))
 
         x = x + self.drop_path(self.mlp(self.norm2(x)))
-        return x, attn_weight
+        return x
 
 
 class StudentPoolingBlock(PoolingBlock):
@@ -119,14 +117,12 @@ class StudentPoolingBlock(PoolingBlock):
 
     def forward(self, x, tchr_attn_weight=None, tchr_keep_index=None):
         feature, keep_index = self.attn(self.norm1(x), tchr_attn_weight, tchr_keep_index)
-        attn_weight = self.attn.attn_weight
-        
         x = x + self.drop_path(feature)
         if keep_index is not None:
             if len(keep_index) != x.shape[1]:
                 x = x.gather(dim=1, index=keep_index)
         x = x + self.drop_path(self.mlp(self.norm2(x)))
-        return x, attn_weight
+        return x
 
 
 class StudentPoolingAttention(PoolingAttention):
