@@ -23,14 +23,23 @@ def parse_args():
                              "Options:"
                              "resources/demo.jpg"
                              "resources/test_0002_112.jpg")
-    parser.add_argument('--checkpoint_pth', type=str, default='weights/APViT_RAF-3eeecf7d.pth',
+    parser.add_argument('--checkpoint_dir', type=str, default='work_dirs',
                         help="Options:"
-                             "weights/APViT_RAF-3eeecf7d.pth - official pretrained"
-                             "work_dirs/RAF_blurX/epoch_40.pth - locally trained (X = 0/4/8...")
+                             "weights - original pretrained"
+                             "work_dirs - locally trained")
+    parser.add_argument('--checkpoint_file_name', type=str, default='epoch_40.pth',
+                        help="Options:"
+                             "APViT_RAF-3eeecf7d.pth - official pretrained"
+                             "epoch_40.pth - locally trained")
+    parser.add_argument('--checkpoint_model', type=str, default='RAF_blur0',
+                        help="Options:"
+                             "None - official pretrained"
+                             "RAF_blurX - locally trained (X = 0/4/8...")
     parser.add_argument('--blur', type=int, default=None)
 
     args = parser.parse_args()
     return args
+
 
 def main():
     args = parse_args()
@@ -44,7 +53,9 @@ def main():
 
     # build the model and load checkpoint
     classifier = build_classifier(cfg.model)
-    load_checkpoint(classifier, args.checkpoint_pth, map_location='cpu')
+    cp_full_pth = f'{args.checkpoint_dir}/{args.checkpoint_model}/{args.checkpoint_file_name}' if args.checkpoint_model \
+        else f'{args.checkpoint_dir}/{args.checkpoint_file_name}'
+    load_checkpoint(classifier, cp_full_pth, map_location='cpu')
     classifier = classifier.to("cuda")
     classifier.eval()
 
@@ -78,18 +89,15 @@ def main():
     def hook_attn_fn(module, input, output):
         vit_attn_weights.append(module.attn_weight.cpu())
 
-
     def hook_keep_ind_fn(module, input, output):
         if module.keep_index is not None:
             vit_keep_inds.append(module.keep_index.cpu())
         else:
             vit_keep_inds.append(module.keep_index)
 
-
     for block in classifier.vit.blocks:
         block.attn.register_forward_hook(hook_attn_fn)
         block.attn.register_forward_hook(hook_keep_ind_fn)
-
 
     # First, extract CNN attention, for consistency with indexes (vit indexes are selected only from remains from cnn):
     cnn_attn_map = classifier.extract_attn_map(data['img'])
@@ -102,9 +110,11 @@ def main():
 
     # Put attention_weight values in correct positions (in original 196 vector)
     current_keep_inds = cnn_keep_indexes
+    f, axs = plt.subplots(2, 4)
+    f.set_size_inches((8.8, 4.8))
+    axs = axs.flatten()
     for blk in range(8):
-        plt.figure(figsize=(6, 6))
-
+        ax = axs[blk]
         full_attn_weight = np.zeros(196)
         if blk <= 4:  # First five blocks - no need to remove additional patches:
             full_attn_weight[current_keep_inds] = vit_attn_weights[blk].detach().squeeze()[1:]  # remove cls token [index 0]
@@ -120,10 +130,14 @@ def main():
         img_masked = img.copy()
         img_masked[~att_112.astype(bool)] = 255  # mask patches that were already removed by CNN (in white)
 
-        plt.imshow(img_masked[:, :, ::-1])
-        plt.imshow(masked_att, cmap='jet', alpha=.4)
+        ax.imshow(img_masked[:, :, ::-1])
+        ax.imshow(masked_att, cmap='jet', alpha=.4)
 
-        plt.title(f'Block {blk}')
+        ax.set_title(f'Block {blk}')
+        ax.set_xticks([])
+        ax.set_yticks([])
+    ttl = args.checkpoint_model if args.checkpoint_model else 'Official'
+    f.suptitle(ttl)
 
     plt.show(block=True)
 
