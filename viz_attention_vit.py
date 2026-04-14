@@ -16,7 +16,9 @@ from mmcls.models.utils import top_pool
 def parse_args():
     parser = argparse.ArgumentParser(description='Vizualize APViT model CNN attention')
     parser.add_argument('--config', type=str, default="configs/apvit/RAF_run_from_terminal.py",
-                        help='config file path')
+                        help='config file path'
+                             'The default is for official model with vit (8 blocks), '
+                             'if using local models (deit, 12 blocks) change to: configs/apvit/RAF_terminal_deit.py')
     parser.add_argument('--keep_num', type=int, default=160, help='')
     parser.add_argument('--img_pth', type=str, default='resources/demo.jpg',
                         help="Image for attention visualization."
@@ -48,8 +50,8 @@ def main():
     cfg.model.extractor.pretrained = None
     cfg.model.vit.pretrained = None
     cfg.model.vit.cnn_pool_config['keep_num'] = args.keep_num
-    cfg.model.vit.vit_pool_configs['keep_rates'] = [1.] * 4 + [0.9] * 4
-    cfg.model.vit.attn_before_proj = True
+    # cfg.model.vit.vit_pool_configs['keep_rates'] = [1.] * 4 + [0.9] * 4
+    # cfg.model.vit.attn_before_proj = True
 
     # build the model and load checkpoint
     classifier = build_classifier(cfg.model)
@@ -110,10 +112,10 @@ def main():
 
     # Put attention_weight values in correct positions (in original 196 vector)
     current_keep_inds = cnn_keep_indexes
-    f, axs = plt.subplots(2, 4)
-    f.set_size_inches((8.8, 4.8))
+    f, axs = plt.subplots(np.int32(np.ceil(cfg.model.vit.depth / 4)), 4)
+    f.set_size_inches((8.8, cfg.model.vit.depth/1.75))  # used to be h=4.8 (for 2 rows).
     axs = axs.flatten()
-    for blk in range(8):
+    for blk in range(cfg.model.vit.depth):
         ax = axs[blk]
         full_attn_weight = np.zeros(196)
         if blk <= 4:  # First five blocks - no need to remove additional patches:
