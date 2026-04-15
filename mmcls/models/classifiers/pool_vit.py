@@ -44,6 +44,8 @@ class PoolingVitClassifier(BaseClassifier):
         if head is not None:
             self.head = build_head(head)
 
+        if pretrained is not None:
+            print(f'Loading APViT model weights from: {pretrained}')
         self.init_weights(pretrained=pretrained)
 
     def init_weights(self, pretrained=None):
