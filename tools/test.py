@@ -1,6 +1,7 @@
 import argparse
 import os
 import warnings
+import sys
 
 import mmcv
 import numpy as np
@@ -8,6 +9,8 @@ import torch
 from mmcv import DictAction
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))  # add parent dir for importing mmcls
 
 from mmcls.apis import multi_gpu_test, single_gpu_test
 from mmcls.core import wrap_fp16_model
