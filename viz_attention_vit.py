@@ -38,6 +38,11 @@ def parse_args():
                              "None - official pretrained"
                              "RAF_blurX - locally trained (X = 0/4/8...")
     parser.add_argument('--blur', type=int, default=None)
+    parser.add_argument('--show_im_with_blur', action='store_true')
+    parser.add_argument('--not_show_attn', action='store_true')
+    parser.add_argument('--show_only_img', action='store_true',
+                        help='just plot the original image (with or without blur, according to show_im_with_blur)')
+    parser.add_argument('--show_patch_grid', action='store_true')
 
     args = parser.parse_args()
     return args
@@ -80,6 +85,24 @@ def main():
     # preprocess the image
     data = test_preprocess(dict(img=img))
     data['img'] = data['img'][None, ...].cuda()
+
+    if args.show_only_img:
+        f, ax = plt.subplots()
+        if args.show_im_with_blur and args.blur:
+            show_preprocess = Compose([dict(type='GaussianBlur', sigma_min=args.blur, sigma_max=args.blur)])
+            img2show = show_preprocess(dict(img=img))['img'][:, :, ::-1]
+        else:
+            img2show = img.copy()[:, :, ::-1]
+        ax.imshow(img2show)
+        if args.show_patch_grid:
+            ax.set_xticks(np.arange(8, 112, 8))
+            ax.set_yticks(np.arange(8, 112, 8))
+            ax.grid('on')
+        else:
+            ax.set_xticks([])
+            ax.set_yticks([])
+        plt.show(block=True)
+        return
 
     # Get vit attention-maps per block:
     vit_attn_weights = []
@@ -129,11 +152,16 @@ def main():
         mask = (att_112 == 0)   # for creating masked_attn - so color map takes into account only the relevant patches.
         masked_att = np.ma.masked_where(mask, att_112)
 
-        img_masked = img.copy()
+        if args.show_im_with_blur and args.blur:
+            show_preprocess = Compose([dict(type='GaussianBlur', sigma_min=args.blur, sigma_max=args.blur)])
+            img_masked = show_preprocess(dict(img=img))['img'][:, :, ::-1]
+        else:
+            img_masked = img.copy()[:, :, ::-1]
         img_masked[~att_112.astype(bool)] = 255  # mask patches that were already removed by CNN (in white)
 
-        ax.imshow(img_masked[:, :, ::-1])
-        ax.imshow(masked_att, cmap='jet', alpha=.4)
+        ax.imshow(img_masked)
+        if not args.not_show_attn:
+            ax.imshow(masked_att, cmap='jet', alpha=.4)
 
         ax.set_title(f'Block {blk}')
         ax.set_xticks([])
