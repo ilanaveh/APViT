@@ -18,7 +18,7 @@ from mmcls.datasets import build_dataloader, build_dataset
 from mmcls.models import build_classifier
 
 
-def parse_args():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description='mmcls test model')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
@@ -43,14 +43,15 @@ def parse_args():
         default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
-    args = parser.parse_args()
+    parser.add_argument('--return_labels', action="store_true")
+    args = parser.parse_args(argv)
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
     return args
 
 
-def main():
-    args = parse_args()
+def main(argv=None):
+    args = parse_args(argv)
 
     cfg = mmcv.Config.fromfile(args.config)
     if args.options is not None:
@@ -142,6 +143,26 @@ def main():
                       f'pred_label = {pred_label[0]} '
                       f'and pred_class = {pred_class[0]}. '
                       'Specify --out to save all results to files.')
+
+        if args.return_labels:
+            scores = np.vstack(outputs)
+            pred_score = np.max(scores, axis=1)
+            pred_label = np.argmax(scores, axis=1)
+            CLASSES = checkpoint['meta']['CLASSES']
+            pred_class = [CLASSES[lb] for lb in pred_label]
+            target_label = dataset.get_gt_labels()
+            target_class = [CLASSES[lb] for lb in target_label]
+            results2return = {
+                'pred_score': pred_score,
+                'pred_label': pred_label,
+                'pred_class': pred_class,
+                'target_label': target_label,
+                'target_class': target_class,
+                **{f'{topk} accuracy': round(acc, 2) for topk, acc in results.items()}
+
+            }
+            return results2return
+
     if args.out and rank == 0:
         print(f'\nwriting results to {args.out}')
         mmcv.dump(results, args.out)
