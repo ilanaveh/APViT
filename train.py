@@ -159,6 +159,10 @@ def main():
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model) 
 
+    if 'freeze_backbone' in cfg.model and cfg.model['freeze_backbone']:
+        for name, p in model.named_parameters():
+            if not name.startswith("head."):
+                p.requires_grad = False
     # for name, param in model.named_parameters():
     #     print(name)
     # exit()
