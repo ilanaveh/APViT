@@ -44,6 +44,8 @@ def parse_args(argv=None):
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument('--return_labels', action="store_true")
+    parser.add_argument('--return_acc', action="store_true")
+    parser.add_argument('--test_blur', type=int, default=None)
     args = parser.parse_args(argv)
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -61,6 +63,9 @@ def main(argv=None):
         torch.backends.cudnn.benchmark = True
     cfg.model.pretrained = None
     cfg.data.test.test_mode = True
+    if args.test_blur is not None and cfg.data['test']['pipeline'][1]['type'] == 'GaussianBlur':
+        cfg.data['test']['pipeline'][1]['sigma_min'] = args.test_blur
+        cfg.data['test']['pipeline'][1]['sigma_max'] = args.test_blur
 
     # cfg.model.extractor.pretrained = None
     # cfg.model.vit.pretrained = None
@@ -166,6 +171,9 @@ def main(argv=None):
     if args.out and rank == 0:
         print(f'\nwriting results to {args.out}')
         mmcv.dump(results, args.out)
+
+    if args.return_acc:
+        return results
 
 
 if __name__ == '__main__':
