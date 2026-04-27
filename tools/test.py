@@ -63,9 +63,14 @@ def main(argv=None):
         torch.backends.cudnn.benchmark = True
     cfg.model.pretrained = None
     cfg.data.test.test_mode = True
-    if args.test_blur is not None and cfg.data['test']['pipeline'][1]['type'] == 'GaussianBlur':
-        cfg.data['test']['pipeline'][1]['sigma_min'] = args.test_blur
-        cfg.data['test']['pipeline'][1]['sigma_max'] = args.test_blur
+    if args.test_blur is not None:
+        if cfg.data['test']['pipeline'][1]['type'] == 'GaussianBlur':
+            cfg.data['test']['pipeline'][1]['sigma_min'] = args.test_blur
+            cfg.data['test']['pipeline'][1]['sigma_max'] = args.test_blur
+        elif args.test_blur:  # if original config doesn't have GaussianBlur, and args.test_blur > 0:
+            cfg.data['test']['pipeline'] = [cfg.data['test']['pipeline'][0]] + \
+                                           [dict(type='GaussianBlur', sigma_min=args.test_blur, sigma_max=args.test_blur)] +\
+                                           cfg.data['test']['pipeline'][1:]
 
     # cfg.model.extractor.pretrained = None
     # cfg.model.vit.pretrained = None
