@@ -33,7 +33,7 @@ class PoolingVitClassifier(BaseClassifier):
             print('freeze backbone: %s' % extractor['type'])
             self.extractor.eval()
             for param in self.extractor.parameters():
-                    param.requires_grad = False
+                param.requires_grad = False
         if convert:
             self.convert = build_neck(convert)
         self.vit:nn.Module = build_backbone(vit)
