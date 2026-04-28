@@ -161,7 +161,7 @@ def main():
 
     if 'freeze_backbone' in cfg.model and cfg.model['freeze_backbone']:
         for name, p in model.named_parameters():
-            if not name.startswith("head."):
+            if not name.startswith("head.") and not name.startswith("vit.projs"):
                 p.requires_grad = False
     # for name, param in model.named_parameters():
     #     print(name)
