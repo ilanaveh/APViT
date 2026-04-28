@@ -15,17 +15,27 @@ from tools import test
 
 save2file = False
 append2existing = True
-file_name = 'results2'
+file_name = 'results'
 
-model_names = ['RAF_blur0', 'RAF_blur8', 'RAF_blur0-8']
+# model_names = ['RAF_blur0', 'RAF_blur8', 'RAF_blur0-8']
+# test_blurs = {m: None for m in model_names}  # None for using original config.
+# test_blurs['RAF_blur0'] = 4
+# test_blurs['RAF_blur8'] = 4
+# test_blurs['RAF_blur0-8'] = 4
+
+model_names = ['RAF_blur0_pretrained8', 'RAF_blur0_pretrained0-8', 'RAF_blur8_pretrained0-8', 'RAF_blur8_pretrained_blur0']
 test_blurs = {m: None for m in model_names}  # None for using original config.
-test_blurs['RAF_blur0'] = 8
-test_blurs['RAF_blur8'] = 0
-test_blurs['RAF_blur0-8'] = 0
+test_blurs['RAF_blur0_pretrained8'] = 0
+test_blurs['RAF_blur0_pretrained0-8'] = 0
+test_blurs['RAF_blur8_pretrained0-8'] = 8
+test_blurs['RAF_blur8_pretrained_blur0'] = 8
 
 if append2existing and os.path.isfile(f"{file_name}.json"):
     with open(f"{file_name}.json", "r") as f:
         results = json.load(f)
+    for m in model_names:
+        if m not in results.keys():
+            results[m] = {'rep0': {}}
 else:
     results = {m: {'rep0': {}} for m in model_names}
 
