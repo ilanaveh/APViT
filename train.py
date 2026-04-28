@@ -159,13 +159,30 @@ def main():
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model) 
 
-    if 'freeze_backbone' in cfg.model and cfg.model['freeze_backbone']:
+    all_open = True
+    if 'freeze_backbone' in cfg and cfg['freeze_backbone']:
+        all_open = False
         for name, p in model.named_parameters():
             if not name.startswith("head.") and not name.startswith("vit.projs"):
                 p.requires_grad = False
-    # for name, param in model.named_parameters():
-    #     print(name)
-    # exit()
+    elif 'freeze_cnn' in cfg and cfg['freeze_cnn']:
+        all_open = False
+        for name, p in model.named_parameters():
+            if name.startswith("extractor."):
+                p.requires_grad = False
+    elif 'freeze_vit' in cfg and cfg['freeze_vit']:
+        all_open = False
+        for name, p in model.named_parameters():
+            if name.startswith("vit.") and not name.startswith("vit.projs"):
+                p.requires_grad = False
+    print("=" * 60)
+    if all_open:
+        print("Entire network open for training.")
+    else:
+        print("After freezing - current status:")
+        for name, p in model.named_parameters():
+            print(f'{name}: requires_grad = {p.requires_grad}')
+    print("=" * 60)
 
     datasets = [build_dataset(cfg.data.train)]
     if len(cfg.workflow) == 2:
