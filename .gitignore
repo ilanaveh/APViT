@@ -119,5 +119,9 @@ weights
 .history
 .DS_Store
 
+# IN added locally:
+configs/
+resources/
+
 # Pytorch
 *.pth
