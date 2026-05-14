@@ -10,14 +10,17 @@ import torch.distributed as dist
 from mmcv.runner import get_dist_info
 
 
-def single_gpu_test(model, data_loader, show=False, out_dir=None):
+def single_gpu_test(model, data_loader, show=False, out_dir=None, track_grad=False):
     model.eval()
     results = []
     dataset = data_loader.dataset
     prog_bar = mmcv.ProgressBar(len(dataset))
     for i, data in enumerate(data_loader):
-        with torch.no_grad():
-            result = model(return_loss=False, **data)
+        if track_grad:
+            result = model(return_loss=False, **data).detach().cpu()
+        else:
+            with torch.no_grad():
+                result = model(return_loss=False, **data)
         results.append(result)
 
         if show or out_dir:
