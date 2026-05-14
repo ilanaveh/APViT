@@ -156,7 +156,8 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
                 results,
                 metric='accuracy',
                 metric_options={'topk': (1, 2)},
-                logger=None):
+                logger=None,
+                gt_labels=None):
         """Evaluate the dataset.
 
         Args:
@@ -178,7 +179,8 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
             if metric not in allowed_metrics:
                 raise KeyError(f'metric {metric} is not supported.')
             results = np.vstack(results)
-            gt_labels = self.get_gt_labels()
+            if gt_labels is None:
+                gt_labels = self.get_gt_labels()
             num_imgs = len(results)
             assert len(gt_labels) == num_imgs, f'{len(gt_labels)}, {num_imgs}'
             # convert gt_labels to another dataset format for cross-dataset test
