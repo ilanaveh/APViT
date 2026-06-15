@@ -113,6 +113,7 @@ def main(argv=None):
     rank, _ = get_dist_info()
     if rank == 0:
         if args.metric == 'save_result':
+            mdl_nm = args.checkpoint.split('/')[-2]
             scores = np.vstack(outputs)
             pred_label = np.argmax(scores, axis=1)
             gt_label = dataset.get_gt_labels()
@@ -120,8 +121,8 @@ def main(argv=None):
             result = []
             for i, info in enumerate(dataset.data_infos):
                 file_name = info['img_info']['filename']
-                result.append(f'{file_name}, {gt_label[i]==pred_label[i]}')
-            with open('output/save_result.csv', 'w') as f:
+                result.append(f'{file_name}, {gt_label[i]==pred_label[i]}, {gt_label[i]}, {scores[i, gt_label[i]]}, {pred_label[i]}, {scores[i, pred_label[i]]}')
+            with open(f'output/no_pooling/save_result_{mdl_nm}_test{args.test_blur}.csv', 'w') as f:
                 f.write('\n'.join(result))
             exit()
 
