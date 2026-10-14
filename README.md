@@ -1,6 +1,22 @@
 APViT: Vision Transformer With Attentive Pooling for Robust Facial Expression Recognition
 ==
 
+> **Origin**: This repository is a mirror of the local folder `APViT` from `W:\ilanaveh\code\Transformers\APViT`.
+>
+> **Fork Information**: This is a fork of the original [APViT](https://github.com/youqingxiaozhua/APViT) by Fanglei Xue et al. The upstream repository is tracked via the `upstream` remote.
+>
+> **Key Modifications in This Fork**:
+> - **Attention Visualization**: Added code for saving images with attention masks (`viz_attn_apvit.py` and related utilities)
+> - **Attention Distillation**: Implemented knowledge distillation using attention maps from teacher models (StudentPoolingViT, StudentPoolingAttention classes)
+> - **Variable Blur Training**: Added support for training with variable Gaussian blur ranges (`GaussianBlurRand`, `blur_max` config)
+> - **Gradient Tracking**: Added `track_grad` option during test for attention visualization (used by Transformer_Explainability)
+> - **Dataset Extensions**: Added `BaseDataset` option to pass `gt_labels` for subset evaluation
+> - **Result Tracking**: Enhanced result files with predicted/true labels and per-blur metrics
+> - **Config System**: Added custom config files (`configs/apvit/RAF_local_path.py`, `configs/apvit/RAF_attn_before_proj.py`) and pretty-print utilities
+> - **Facial Expression Focus**: Adapted for robust facial expression recognition with attention pooling
+>
+> These modifications extend the original APViT for attention interpretability research, enabling visualization of attention maps, distillation via attention, and robustness to input blur variations.
+
 <div align="center">
   <img src="resources/model.png" width="800"/>
 </div>
