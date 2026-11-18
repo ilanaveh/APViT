@@ -124,6 +124,3 @@ weights
 # IN added locally:
 configs/
 resources/
-
-# Pytorch
-*.pth
