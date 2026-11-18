@@ -46,6 +46,8 @@ def parse_args(argv=None):
     parser.add_argument('--return_labels', action="store_true")
     parser.add_argument('--return_acc', action="store_true")
     parser.add_argument('--test_blur', type=int, default=None)
+    parser.add_argument('--data_pth_suff', type=str, default=None)
+    parser.add_argument('--force_no_pool', action="store_true")
     args = parser.parse_args(argv)
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -71,6 +73,11 @@ def main(argv=None):
             cfg.data['test']['pipeline'] = [cfg.data['test']['pipeline'][0]] + \
                                            [dict(type='GaussianBlur', sigma_min=args.test_blur, sigma_max=args.test_blur)] +\
                                            cfg.data['test']['pipeline'][1:]
+    if args.data_pth_suff is not None:
+        cfg.data['test']['data_prefix'] += args.data_pth_suff
+    if args.force_no_pool:
+        cfg['model']['vit']['cnn_pool_config'] = None
+        cfg['model']['vit']['vit_pool_configs'] = None
 
     # cfg.model.extractor.pretrained = None
     # cfg.model.vit.pretrained = None

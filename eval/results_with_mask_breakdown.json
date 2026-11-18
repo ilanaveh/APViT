@@ -1,0 +1,78 @@
+{
+ "RAF_blur8_freeze": {
+  "eyes": {
+   "test_8": {
+    "Anger": 0.21,
+    "Disgust": 0.03,
+    "Fear": 0.24,
+    "Happiness": 0.89,
+    "Neutral": 0.34,
+    "Sadness": 0.21,
+    "Surprise": 0.5,
+    "total_acc": 52.18
+   }
+  },
+  "mouth": {
+   "test_8": {
+    "Anger": 0.09,
+    "Disgust": 0.02,
+    "Fear": 0.0,
+    "Happiness": 0.71,
+    "Neutral": 0.37,
+    "Sadness": 0.13,
+    "Surprise": 0.19,
+    "total_acc": 40.38
+   }
+  },
+  "none": {
+   "test_8": {
+    "Anger": 0.46,
+    "Disgust": 0.19,
+    "Fear": 0.43,
+    "Happiness": 0.8,
+    "Neutral": 0.57,
+    "Sadness": 0.22,
+    "Surprise": 0.67,
+    "total_acc": 58.77
+   }
+  }
+ },
+ "RAF_blur8_pretrained0-8_freeze_fix_projs": {
+  "eyes": {
+   "test_8": {
+    "Anger": 0.45,
+    "Disgust": 0.19,
+    "Fear": 0.11,
+    "Happiness": 0.83,
+    "Neutral": 0.47,
+    "Sadness": 0.28,
+    "Surprise": 0.53,
+    "total_acc": 56.13
+   }
+  },
+  "mouth": {
+   "test_8": {
+    "Anger": 0.52,
+    "Disgust": 0.27,
+    "Fear": 0.03,
+    "Happiness": 0.43,
+    "Neutral": 0.42,
+    "Sadness": 0.18,
+    "Surprise": 0.39,
+    "total_acc": 36.77
+   }
+  },
+  "none": {
+   "test_8": {
+    "Anger": 0.61,
+    "Disgust": 0.29,
+    "Fear": 0.41,
+    "Happiness": 0.84,
+    "Neutral": 0.61,
+    "Sadness": 0.37,
+    "Surprise": 0.71,
+    "total_acc": 65.22
+   }
+  }
+ }
+}

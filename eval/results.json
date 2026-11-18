@@ -1,0 +1,1491 @@
+{
+ "RAF_blur0": {
+  "rep0": {
+   "test_0": 89.34,
+   "test_8": 33.57,
+   "test_4": 71.71,
+   "test_2": 87.13,
+   "test_6": 52.57
+  },
+  "rep1": {
+   "test_0": 89.54,
+   "test_8": 32.92,
+   "test_4": 71.45
+  },
+  "rep2": {
+   "test_0": 89.18,
+   "test_8": 30.08,
+   "test_4": 71.51
+  },
+  "rep3": {
+   "test_0": 89.21,
+   "test_8": 30.57,
+   "test_4": 72.82
+  },
+  "rep4": {
+   "test_0": 89.5,
+   "test_8": 34.0,
+   "test_4": 71.74
+  }
+ },
+ "RAF_blur8": {
+  "rep0": {
+   "test_8": 76.56,
+   "test_0": 52.05,
+   "test_4": 68.94,
+   "test_2": 57.63,
+   "test_6": 75.46
+  },
+  "rep1": {
+   "test_8": 77.25,
+   "test_0": 50.26,
+   "test_4": 67.63
+  },
+  "rep2": {
+   "test_8": 76.79,
+   "test_0": 50.07,
+   "test_4": 67.34
+  },
+  "rep3": {
+   "test_8": 76.79,
+   "test_0": 51.34,
+   "test_4": 67.54
+  },
+  "rep4": {
+   "test_8": 76.43,
+   "test_0": 49.48,
+   "test_4": 68.06
+  }
+ },
+ "RAF_blur0-8": {
+  "rep0": {
+   "test_8": 82.01,
+   "test_0": 86.38,
+   "test_4": 85.04,
+   "test_2": 86.15,
+   "test_6": 84.06
+  },
+  "rep1": {
+   "test_8": 81.75,
+   "test_0": 86.15,
+   "test_4": 85.85
+  }
+ },
+ "RAF_blur0_pretrained8": {
+  "rep0": {
+   "test_0": 80.87
+  }
+ },
+ "RAF_blur0_pretrained0-8": {
+  "rep0": {
+   "test_0": 87.26
+  }
+ },
+ "RAF_blur8_pretrained0-8": {
+  "rep0": {
+   "test_8": 81.19
+  },
+  "rep1": {
+   "test_8": 81.1
+  }
+ },
+ "RAF_blur8_pretrained_blur0": {
+  "rep0": {
+   "test_8": 78.42
+  }
+ },
+ "RAF_blur0_pretrained8_freeze": {
+  "rep0": {
+   "test_0": 57.66
+  }
+ },
+ "RAF_blur0_pretrained0-8_freeze": {
+  "rep0": {
+   "test_0": 69.13
+  }
+ },
+ "RAF_blur8_freeze": {
+  "rep0": {
+   "test_8": 58.8,
+   "test_8_testNoPool": 58.54
+  }
+ },
+ "RAF_blur8_pretrained0-8_freeze_fix_projs": {
+  "rep0": {
+   "test_8": 65.25,
+   "test_8_testNoPool": 65.97
+  }
+ },
+ "RAF_blur0_freeze": {
+  "rep0": {
+   "test_0": 79.86,
+   "test_0_testNoPool": 79.6
+  }
+ },
+ "RAF_blur1_pretrained0-8_freeze": {
+  "rep0": {
+   "test_1": 69.3
+  }
+ },
+ "RAF_blur2_pretrained0-8_freeze": {
+  "rep0": {
+   "test_2": 69.36
+  }
+ },
+ "RAF_blur3_pretrained0-8_freeze": {
+  "rep0": {
+   "test_3": 68.29
+  }
+ },
+ "RAF_blur4_pretrained0-8_freeze": {
+  "rep0": {
+   "test_4": 69.07
+  }
+ },
+ "RAF_blur5_pretrained0-8_freeze": {
+  "rep0": {
+   "test_5": 68.35
+  }
+ },
+ "RAF_blur6_pretrained0-8_freeze": {
+  "rep0": {
+   "test_6": 67.28
+  }
+ },
+ "RAF_blur7_pretrained0-8_freeze": {
+  "rep0": {
+   "test_7": 66.98
+  }
+ },
+ "RAF_blur9_pretrained0-8_freeze": {
+  "rep0": {
+   "test_9": 63.59
+  }
+ },
+ "RAF_blur10_pretrained0-8_freeze": {
+  "rep0": {
+   "test_10": 61.57
+  }
+ },
+ "RAF_blur11_pretrained0-8_freeze": {
+  "rep0": {
+   "test_11": 60.79
+  }
+ },
+ "RAF_blur12_pretrained0-8_freeze": {
+  "rep0": {
+   "test_12": 59.03
+  }
+ },
+ "RAF_blur13_pretrained0-8_freeze": {
+  "rep0": {
+   "test_13": 57.11
+  }
+ },
+ "RAF_blur14_pretrained0-8_freeze": {
+  "rep0": {
+   "test_14": 55.93
+  }
+ },
+ "RAF_blur15_pretrained0-8_freeze": {
+  "rep0": {
+   "test_15": 54.47
+  }
+ },
+ "RAF_blur16_pretrained0-8_freeze": {
+  "rep0": {
+   "test_16": 53.52
+  }
+ },
+ "RAF_blur1_pretrained8_freeze": {
+  "rep0": {
+   "test_1": 57.72
+  }
+ },
+ "RAF_blur2_pretrained8_freeze": {
+  "rep0": {
+   "test_2": 57.46
+  }
+ },
+ "RAF_blur3_pretrained8_freeze": {
+  "rep0": {
+   "test_3": 58.05
+  }
+ },
+ "RAF_blur4_pretrained8_freeze": {
+  "rep0": {
+   "test_4": 57.89
+  }
+ },
+ "RAF_blur5_pretrained8_freeze": {
+  "rep0": {
+   "test_5": 57.79
+  }
+ },
+ "RAF_blur6_pretrained8_freeze": {
+  "rep0": {
+   "test_6": 57.46
+  }
+ },
+ "RAF_blur7_pretrained8_freeze": {
+  "rep0": {
+   "test_7": 57.99
+  }
+ },
+ "RAF_blur9_pretrained8_freeze": {
+  "rep0": {
+   "test_9": 58.87
+  }
+ },
+ "RAF_blur10_pretrained8_freeze": {
+  "rep0": {
+   "test_10": 59.16
+  }
+ },
+ "RAF_blur11_pretrained8_freeze": {
+  "rep0": {
+   "test_11": 58.83
+  }
+ },
+ "RAF_blur12_pretrained8_freeze": {
+  "rep0": {
+   "test_12": 58.9
+  }
+ },
+ "RAF_blur13_pretrained8_freeze": {
+  "rep0": {
+   "test_13": 58.18
+  }
+ },
+ "RAF_blur14_pretrained8_freeze": {
+  "rep0": {
+   "test_14": 57.66
+  }
+ },
+ "RAF_blur15_pretrained8_freeze": {
+  "rep0": {
+   "test_15": 57.63
+  }
+ },
+ "RAF_blur16_pretrained8_freeze": {
+  "rep0": {
+   "test_16": 57.07
+  }
+ },
+ "RAF_blur17_pretrained0-8": {
+  "rep0": {
+   "test_17": 65.71
+  }
+ },
+ "RAF_blur17_pretrained0-8_freeze": {
+  "rep0": {
+   "test_17": 53.85
+  }
+ },
+ "RAF_blur18_pretrained0-8": {
+  "rep0": {
+   "test_18": 64.86
+  }
+ },
+ "RAF_blur18_pretrained0-8_freeze": {
+  "rep0": {
+   "test_18": 53.03
+  }
+ },
+ "RAF_blur19_pretrained0-8": {
+  "rep0": {
+   "test_19": 63.85
+  }
+ },
+ "RAF_blur19_pretrained0-8_freeze": {
+  "rep0": {
+   "test_19": 51.92
+  }
+ },
+ "RAF_blur20_pretrained0-8": {
+  "rep0": {
+   "test_20": 61.8
+  }
+ },
+ "RAF_blur20_pretrained0-8_freeze": {
+  "rep0": {
+   "test_20": 51.5
+  }
+ },
+ "RAF_blur21_pretrained0-8": {
+  "rep0": {
+   "test_21": 60.07
+  }
+ },
+ "RAF_blur21_pretrained0-8_freeze": {
+  "rep0": {
+   "test_21": 50.26
+  }
+ },
+ "RAF_blur22_pretrained0-8": {
+  "rep0": {
+   "test_22": 59.35
+  }
+ },
+ "RAF_blur22_pretrained0-8_freeze": {
+  "rep0": {
+   "test_22": 49.9
+  }
+ },
+ "RAF_blur23_pretrained0-8": {
+  "rep0": {
+   "test_23": 57.2
+  }
+ },
+ "RAF_blur23_pretrained0-8_freeze": {
+  "rep0": {
+   "test_23": 48.24
+  }
+ },
+ "RAF_blur24_pretrained0-8": {
+  "rep0": {
+   "test_24": 55.51
+  }
+ },
+ "RAF_blur24_pretrained0-8_freeze": {
+  "rep0": {
+   "test_24": 47.43
+  }
+ },
+ "RAF_blur17_pretrained8": {
+  "rep0": {
+   "test_17": 69.2
+  }
+ },
+ "RAF_blur17_pretrained8_freeze": {
+  "rep0": {
+   "test_17": 55.57
+  }
+ },
+ "RAF_blur18_pretrained8": {
+  "rep0": {
+   "test_18": 67.5
+  }
+ },
+ "RAF_blur18_pretrained8_freeze": {
+  "rep0": {
+   "test_18": 55.51
+  }
+ },
+ "RAF_blur19_pretrained8": {
+  "rep0": {
+   "test_19": 66.04
+  }
+ },
+ "RAF_blur19_pretrained8_freeze": {
+  "rep0": {
+   "test_19": 54.37
+  }
+ },
+ "RAF_blur20_pretrained8": {
+  "rep0": {
+   "test_20": 64.41
+  }
+ },
+ "RAF_blur20_pretrained8_freeze": {
+  "rep0": {
+   "test_20": 52.9
+  }
+ },
+ "RAF_blur21_pretrained8": {
+  "rep0": {
+   "test_21": 62.78
+  }
+ },
+ "RAF_blur21_pretrained8_freeze": {
+  "rep0": {
+   "test_21": 50.95
+  }
+ },
+ "RAF_blur22_pretrained8": {
+  "rep0": {
+   "test_22": 60.37
+  }
+ },
+ "RAF_blur22_pretrained8_freeze": {
+  "rep0": {
+   "test_22": 49.9
+  }
+ },
+ "RAF_blur23_pretrained8": {
+  "rep0": {
+   "test_23": 58.7
+  }
+ },
+ "RAF_blur23_pretrained8_freeze": {
+  "rep0": {
+   "test_23": 49.12
+  }
+ },
+ "RAF_blur24_pretrained8": {
+  "rep0": {
+   "test_24": 57.37
+  }
+ },
+ "RAF_blur24_pretrained8_freeze": {
+  "rep0": {
+   "test_24": 48.27
+  }
+ },
+ "RAF_blur1_pretrained8": {
+  "rep0": {
+   "test_1": 80.57
+  }
+ },
+ "RAF_blur1_pretrained0-8": {
+  "rep0": {
+   "test_1": 87.09
+  }
+ },
+ "RAF_blur2_pretrained8": {
+  "rep0": {
+   "test_2": 80.15
+  }
+ },
+ "RAF_blur2_pretrained0-8": {
+  "rep0": {
+   "test_2": 86.83
+  }
+ },
+ "RAF_blur3_pretrained8": {
+  "rep0": {
+   "test_3": 80.15
+  }
+ },
+ "RAF_blur3_pretrained0-8": {
+  "rep0": {
+   "test_3": 86.25
+  }
+ },
+ "RAF_blur4_pretrained8": {
+  "rep0": {
+   "test_4": 79.79
+  }
+ },
+ "RAF_blur4_pretrained0-8": {
+  "rep0": {
+   "test_4": 85.33
+  }
+ },
+ "RAF_blur5_pretrained8": {
+  "rep0": {
+   "test_5": 79.11
+  }
+ },
+ "RAF_blur5_pretrained0-8": {
+  "rep0": {
+   "test_5": 84.94
+  }
+ },
+ "RAF_blur6_pretrained8": {
+  "rep0": {
+   "test_6": 78.42
+  }
+ },
+ "RAF_blur6_pretrained0-8": {
+  "rep0": {
+   "test_6": 83.9
+  }
+ },
+ "RAF_blur7_pretrained8": {
+  "rep0": {
+   "test_7": 77.87
+  }
+ },
+ "RAF_blur7_pretrained0-8": {
+  "rep0": {
+   "test_7": 82.99
+  }
+ },
+ "RAF_blur9_pretrained8": {
+  "rep0": {
+   "test_9": 75.46
+  }
+ },
+ "RAF_blur9_pretrained0-8": {
+  "rep0": {
+   "test_9": 78.81
+  }
+ },
+ "RAF_blur10_pretrained8": {
+  "rep0": {
+   "test_10": 74.54
+  }
+ },
+ "RAF_blur10_pretrained0-8": {
+  "rep0": {
+   "test_10": 78.42
+  }
+ },
+ "RAF_blur11_pretrained8": {
+  "rep0": {
+   "test_11": 74.19
+  }
+ },
+ "RAF_blur11_pretrained0-8": {
+  "rep0": {
+   "test_11": 76.21
+  }
+ },
+ "RAF_blur12_pretrained8": {
+  "rep0": {
+   "test_12": 73.76
+  }
+ },
+ "RAF_blur12_pretrained0-8": {
+  "rep0": {
+   "test_12": 73.83
+  }
+ },
+ "RAF_blur13_pretrained8": {
+  "rep0": {
+   "test_13": 72.95
+  }
+ },
+ "RAF_blur13_pretrained0-8": {
+  "rep0": {
+   "test_13": 72.16
+  }
+ },
+ "RAF_blur14_pretrained8": {
+  "rep0": {
+   "test_14": 71.45
+  }
+ },
+ "RAF_blur14_pretrained0-8": {
+  "rep0": {
+   "test_14": 71.32
+  }
+ },
+ "RAF_blur15_pretrained8": {
+  "rep0": {
+   "test_15": 71.22
+  }
+ },
+ "RAF_blur15_pretrained0-8": {
+  "rep0": {
+   "test_15": 69.43
+  }
+ },
+ "RAF_blur16_pretrained8": {
+  "rep0": {
+   "test_16": 69.69
+  }
+ },
+ "RAF_blur16_pretrained0-8": {
+  "rep0": {
+   "test_16": 67.57
+  }
+ },
+ "RAF_blur0_pretrained4": {
+  "rep0": {
+   "test_0": 86.44
+  }
+ },
+ "RAF_blur0_pretrained4_freeze": {
+  "rep0": {
+   "test_0": 61.67
+  }
+ },
+ "RAF_blur0_pretrained0-4": {
+  "rep0": {
+   "test_0": 88.89
+  }
+ },
+ "RAF_blur0_pretrained0-4_freeze": {
+  "rep0": {
+   "test_0": 75.03
+  }
+ },
+ "RAF_blur1_pretrained4": {
+  "rep0": {
+   "test_1": 85.23
+  }
+ },
+ "RAF_blur1_pretrained4_freeze": {
+  "rep0": {
+   "test_1": 61.51
+  }
+ },
+ "RAF_blur1_pretrained0-4": {
+  "rep0": {
+   "test_1": 89.54
+  }
+ },
+ "RAF_blur1_pretrained0-4_freeze": {
+  "rep0": {
+   "test_1": 74.97
+  }
+ },
+ "RAF_blur2_pretrained4": {
+  "rep0": {
+   "test_2": 85.4
+  }
+ },
+ "RAF_blur2_pretrained4_freeze": {
+  "rep0": {
+   "test_2": 62.03
+  }
+ },
+ "RAF_blur2_pretrained0-4": {
+  "rep0": {
+   "test_2": 88.14
+  }
+ },
+ "RAF_blur2_pretrained0-4_freeze": {
+  "rep0": {
+   "test_2": 75.0
+  }
+ },
+ "RAF_blur3_pretrained4": {
+  "rep0": {
+   "test_3": 84.94
+  }
+ },
+ "RAF_blur3_pretrained4_freeze": {
+  "rep0": {
+   "test_3": 63.01
+  }
+ },
+ "RAF_blur3_pretrained0-4": {
+  "rep0": {
+   "test_3": 88.1
+  }
+ },
+ "RAF_blur3_pretrained0-4_freeze": {
+  "rep0": {
+   "test_3": 75.1
+  }
+ },
+ "RAF_blur4_pretrained4": {
+  "rep0": {
+   "test_4": 83.57
+  }
+ },
+ "RAF_blur4_pretrained4_freeze": {
+  "rep0": {
+   "test_4": 63.56
+  }
+ },
+ "RAF_blur4_pretrained0-4": {
+  "rep0": {
+   "test_4": 86.57
+  }
+ },
+ "RAF_blur4_pretrained0-4_freeze": {
+  "rep0": {
+   "test_4": 74.61
+  }
+ },
+ "RAF_blur5_pretrained4": {
+  "rep0": {
+   "test_5": 84.52
+  }
+ },
+ "RAF_blur5_pretrained4_freeze": {
+  "rep0": {
+   "test_5": 64.34
+  }
+ },
+ "RAF_blur5_pretrained0-4": {
+  "rep0": {
+   "test_5": 85.17
+  }
+ },
+ "RAF_blur5_pretrained0-4_freeze": {
+  "rep0": {
+   "test_5": 72.98
+  }
+ },
+ "RAF_blur6_pretrained4": {
+  "rep0": {
+   "test_6": 83.6
+  }
+ },
+ "RAF_blur6_pretrained4_freeze": {
+  "rep0": {
+   "test_6": 66.04
+  }
+ },
+ "RAF_blur6_pretrained0-4": {
+  "rep0": {
+   "test_6": 85.07
+  }
+ },
+ "RAF_blur6_pretrained0-4_freeze": {
+  "rep0": {
+   "test_6": 70.53
+  }
+ },
+ "RAF_blur7_pretrained4": {
+  "rep0": {
+   "test_7": 82.33
+  }
+ },
+ "RAF_blur7_pretrained4_freeze": {
+  "rep0": {
+   "test_7": 64.96
+  }
+ },
+ "RAF_blur7_pretrained0-4": {
+  "rep0": {
+   "test_7": 82.63
+  }
+ },
+ "RAF_blur7_pretrained0-4_freeze": {
+  "rep0": {
+   "test_7": 65.32
+  }
+ },
+ "RAF_blur8_pretrained4": {
+  "rep0": {
+   "test_8": 81.26
+  }
+ },
+ "RAF_blur8_pretrained4_freeze": {
+  "rep0": {
+   "test_8": 61.7
+  }
+ },
+ "RAF_blur8_pretrained0-4": {
+  "rep0": {
+   "test_8": 82.04
+  }
+ },
+ "RAF_blur8_pretrained0-4_freeze": {
+  "rep0": {
+   "test_8": 61.21
+  }
+ },
+ "RAF_blur9_pretrained4": {
+  "rep0": {
+   "test_9": 80.22
+  }
+ },
+ "RAF_blur9_pretrained4_freeze": {
+  "rep0": {
+   "test_9": 56.81
+  }
+ },
+ "RAF_blur9_pretrained0-4": {
+  "rep0": {
+   "test_9": 78.85
+  }
+ },
+ "RAF_blur9_pretrained0-4_freeze": {
+  "rep0": {
+   "test_9": 59.09
+  }
+ },
+ "RAF_blur10_pretrained4": {
+  "rep0": {
+   "test_10": 75.85
+  }
+ },
+ "RAF_blur10_pretrained4_freeze": {
+  "rep0": {
+   "test_10": 55.05
+  }
+ },
+ "RAF_blur10_pretrained0-4": {
+  "rep0": {
+   "test_10": 74.15
+  }
+ },
+ "RAF_blur10_pretrained0-4_freeze": {
+  "rep0": {
+   "test_10": 57.11
+  }
+ },
+ "RAF_blur11_pretrained4": {
+  "rep0": {
+   "test_11": 72.26
+  }
+ },
+ "RAF_blur11_pretrained4_freeze": {
+  "rep0": {
+   "test_11": 52.87
+  }
+ },
+ "RAF_blur11_pretrained0-4": {
+  "rep0": {
+   "test_11": 72.88
+  }
+ },
+ "RAF_blur11_pretrained0-4_freeze": {
+  "rep0": {
+   "test_11": 56.55
+  }
+ },
+ "RAF_blur12_pretrained4": {
+  "rep0": {}
+ },
+ "RAF_blur12_pretrained4_freeze": {
+  "rep0": {
+   "test_12": 53.16
+  }
+ },
+ "RAF_blur12_pretrained0-4": {
+  "rep0": {}
+ },
+ "RAF_blur12_pretrained0-4_freeze": {
+  "rep0": {
+   "test_12": 55.61
+  }
+ },
+ "RAF_blur13_pretrained4": {
+  "rep0": {
+   "test_13": 68.58
+  }
+ },
+ "RAF_blur13_pretrained4_freeze": {
+  "rep0": {
+   "test_13": 51.76
+  }
+ },
+ "RAF_blur13_pretrained0-4": {
+  "rep0": {
+   "test_13": 69.0
+  }
+ },
+ "RAF_blur13_pretrained0-4_freeze": {
+  "rep0": {
+   "test_13": 54.34
+  }
+ },
+ "RAF_blur14_pretrained4": {
+  "rep0": {
+   "test_14": 68.02
+  }
+ },
+ "RAF_blur14_pretrained4_freeze": {
+  "rep0": {
+   "test_14": 51.24
+  }
+ },
+ "RAF_blur14_pretrained0-4": {
+  "rep0": {
+   "test_14": 67.08
+  }
+ },
+ "RAF_blur14_pretrained0-4_freeze": {
+  "rep0": {
+   "test_14": 53.91
+  }
+ },
+ "RAF_blur15_pretrained4": {
+  "rep0": {
+   "test_15": 65.32
+  }
+ },
+ "RAF_blur15_pretrained4_freeze": {
+  "rep0": {
+   "test_15": 51.08
+  }
+ },
+ "RAF_blur15_pretrained0-4": {
+  "rep0": {
+   "test_15": 65.81
+  }
+ },
+ "RAF_blur15_pretrained0-4_freeze": {
+  "rep0": {
+   "test_15": 53.59
+  }
+ },
+ "RAF_blur16_pretrained4": {
+  "rep0": {
+   "test_16": 63.92
+  }
+ },
+ "RAF_blur16_pretrained4_freeze": {
+  "rep0": {
+   "test_16": 50.03
+  }
+ },
+ "RAF_blur16_pretrained0-4": {
+  "rep0": {
+   "test_16": 65.25
+  }
+ },
+ "RAF_blur16_pretrained0-4_freeze": {
+  "rep0": {
+   "test_16": 52.51
+  }
+ },
+ "RAF_blur17_pretrained4": {
+  "rep0": {
+   "test_17": 63.56
+  }
+ },
+ "RAF_blur17_pretrained4_freeze": {
+  "rep0": {
+   "test_17": 49.54
+  }
+ },
+ "RAF_blur17_pretrained0-4": {
+  "rep0": {
+   "test_17": 63.59
+  }
+ },
+ "RAF_blur17_pretrained0-4_freeze": {
+  "rep0": {
+   "test_17": 51.96
+  }
+ },
+ "RAF_blur18_pretrained4": {
+  "rep0": {
+   "test_18": 61.83
+  }
+ },
+ "RAF_blur18_pretrained4_freeze": {
+  "rep0": {
+   "test_18": 48.89
+  }
+ },
+ "RAF_blur18_pretrained0-4": {
+  "rep0": {
+   "test_18": 62.16
+  }
+ },
+ "RAF_blur18_pretrained0-4_freeze": {
+  "rep0": {
+   "test_18": 51.01
+  }
+ },
+ "RAF_blur19_pretrained4": {
+  "rep0": {}
+ },
+ "RAF_blur19_pretrained4_freeze": {
+  "rep0": {
+   "test_19": 48.27
+  }
+ },
+ "RAF_blur19_pretrained0-4": {
+  "rep0": {
+   "test_19": 61.54
+  }
+ },
+ "RAF_blur19_pretrained0-4_freeze": {
+  "rep0": {
+   "test_19": 50.26
+  }
+ },
+ "RAF_blur20_pretrained4": {
+  "rep0": {
+   "test_20": 59.29
+  }
+ },
+ "RAF_blur20_pretrained4_freeze": {
+  "rep0": {
+   "test_20": 47.23
+  }
+ },
+ "RAF_blur20_pretrained0-4": {
+  "rep0": {
+   "test_20": 60.23
+  }
+ },
+ "RAF_blur20_pretrained0-4_freeze": {
+  "rep0": {
+   "test_20": 48.73
+  }
+ },
+ "RAF_blur21_pretrained4": {
+  "rep0": {
+   "test_21": 57.37
+  }
+ },
+ "RAF_blur21_pretrained4_freeze": {
+  "rep0": {
+   "test_21": 45.99
+  }
+ },
+ "RAF_blur21_pretrained0-4": {
+  "rep0": {
+   "test_21": 58.08
+  }
+ },
+ "RAF_blur21_pretrained0-4_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur22_pretrained4": {
+  "rep0": {
+   "test_22": 55.61
+  }
+ },
+ "RAF_blur22_pretrained4_freeze": {
+  "rep0": {
+   "test_22": 45.18
+  }
+ },
+ "RAF_blur22_pretrained0-4": {
+  "rep0": {
+   "test_22": 56.29
+  }
+ },
+ "RAF_blur22_pretrained0-4_freeze": {
+  "rep0": {
+   "test_22": 47.69
+  }
+ },
+ "RAF_blur23_pretrained4": {
+  "rep0": {
+   "test_23": 55.02
+  }
+ },
+ "RAF_blur23_pretrained4_freeze": {
+  "rep0": {
+   "test_23": 44.92
+  }
+ },
+ "RAF_blur23_pretrained0-4": {
+  "rep0": {}
+ },
+ "RAF_blur23_pretrained0-4_freeze": {
+  "rep0": {
+   "test_23": 46.38
+  }
+ },
+ "RAF_blur24_pretrained4": {
+  "rep0": {
+   "test_24": 53.94
+  }
+ },
+ "RAF_blur24_pretrained4_freeze": {
+  "rep0": {
+   "test_24": 44.3
+  }
+ },
+ "RAF_blur24_pretrained0-4": {
+  "rep0": {
+   "test_24": 53.16
+  }
+ },
+ "RAF_blur24_pretrained0-4_freeze": {
+  "rep0": {
+   "test_24": 44.88
+  }
+ },
+ "RAF_blur8_pretrained8-16_freeze": {
+  "rep0": {
+   "test_8": 59.88
+  }
+ },
+ "RAF_blur8_mask_eyes_freeze": {
+  "rep0": {
+   "test_8": 56.71
+  }
+ },
+ "RAF_blur8_mask_mouth_freeze": {
+  "rep0": {
+   "test_8": 50.03
+  }
+ },
+ "RAF_blur8_mask_eyes_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 58.08
+  }
+ },
+ "RAF_blur8_mask_mouth_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 51.17
+  }
+ },
+ "RAF_blur8_mask_mouth_eyes_freeze": {
+  "rep0": {
+   "test_8": 46.58
+  }
+ },
+ "RAF_blur8_mask_mouth_eyes_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 43.77
+  }
+ },
+ "RAF_blur8_mask_random_patch_freeze": {
+  "rep0": {
+   "test_8": 54.04
+  }
+ },
+ "RAF_blur8_mask_random_patch_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 55.38
+  }
+ },
+ "RAF_blur8_mask_random_patch_s2_freeze": {
+  "rep0": {
+   "test_8": 49.93
+  }
+ },
+ "RAF_blur8_mask_random_patch_s3_freeze": {
+  "rep0": {
+   "test_8": 52.35
+  }
+ },
+ "RAF_blur8_mask_random_patch_s4_freeze": {
+  "rep0": {
+   "test_8": 53.55
+  }
+ },
+ "RAF_blur8_mask_random_patch_s2_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 50.72
+  }
+ },
+ "RAF_blur8_mask_random_patch_s3_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 52.35
+  }
+ },
+ "RAF_blur8_mask_random_patch_s4_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 54.37
+  }
+ },
+ "RAF_blur8_mask_nose_freeze": {
+  "rep0": {
+   "test_8": 54.17
+  }
+ },
+ "RAF_blur8_mask_nose_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 55.41
+  }
+ },
+ "RAF_blur8_mask_forehead_freeze": {
+  "rep0": {
+   "test_8": 57.99
+  }
+ },
+ "RAF_blur8_mask_forehead_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 64.9
+  }
+ },
+ "RAF_blur8_mask_nose_narrow_freeze": {
+  "rep0": {
+   "test_8": 56.13
+  }
+ },
+ "RAF_blur8_mask_nose_narrow_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 56.58
+  }
+ },
+ "RAF_blur8_mask_nose-forehead_patches_freeze": {
+  "rep0": {
+   "test_8": 55.54
+  }
+ },
+ "RAF_blur8_mask_nose-forehead_patches_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 59.42
+  }
+ },
+ "RAF_blur8_mask_eyes_patches_freeze": {
+  "rep0": {
+   "test_8": 56.58
+  }
+ },
+ "RAF_blur8_mask_eyes_patches_pretrained0-8_freeze": {
+  "rep0": {
+   "test_8": 58.83
+  }
+ },
+ "RAF_blur1_pretrained0_freeze": {
+  "rep0": {
+   "test_1": 79.79
+  }
+ },
+ "RAF_blur2_pretrained0_freeze": {
+  "rep0": {
+   "test_2": 79.24
+  }
+ },
+ "RAF_blur3_pretrained0_freeze": {
+  "rep0": {
+   "test_3": 77.35
+  }
+ },
+ "RAF_blur4_pretrained0_freeze": {
+  "rep0": {
+   "test_4": 72.13
+  }
+ },
+ "RAF_blur5_pretrained0_freeze": {
+  "rep0": {
+   "test_5": 67.05
+  }
+ },
+ "RAF_blur6_pretrained0_freeze": {
+  "rep0": {
+   "test_6": 61.99
+  }
+ },
+ "RAF_blur7_pretrained0_freeze": {
+  "rep0": {
+   "test_7": 58.44
+  }
+ },
+ "RAF_blur8_pretrained0_freeze": {
+  "rep0": {
+   "test_8": 55.48
+  }
+ },
+ "RAF_blur9_pretrained0_freeze": {
+  "rep0": {
+   "test_9": 53.85
+  }
+ },
+ "RAF_blur10_pretrained0_freeze": {
+  "rep0": {
+   "test_10": 52.44
+  }
+ },
+ "RAF_blur11_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur12_pretrained0_freeze": {
+  "rep0": {
+   "test_12": 50.68
+  }
+ },
+ "RAF_blur13_pretrained0_freeze": {
+  "rep0": {
+   "test_13": 49.48
+  }
+ },
+ "RAF_blur14_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur15_pretrained0_freeze": {
+  "rep0": {
+   "test_15": 46.38
+  }
+ },
+ "RAF_blur16_pretrained0_freeze": {
+  "rep0": {
+   "test_16": 45.63
+  }
+ },
+ "RAF_blur17_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur18_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur19_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur20_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur21_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur22_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur23_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur24_pretrained0_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur0_pretrained8-16_freeze": {
+  "rep0": {
+   "test_0": 60.01
+  }
+ },
+ "RAF_blur0_pretrained4-8_freeze": {
+  "rep0": {
+   "test_0": 59.75
+  }
+ },
+ "RAF_blur1_pretrained8-16_freeze": {
+  "rep0": {
+   "test_1": 60.01
+  }
+ },
+ "RAF_blur1_pretrained4-8_freeze": {
+  "rep0": {
+   "test_1": 59.88
+  }
+ },
+ "RAF_blur2_pretrained8-16_freeze": {
+  "rep0": {
+   "test_2": 60.4
+  }
+ },
+ "RAF_blur2_pretrained4-8_freeze": {
+  "rep0": {
+   "test_2": 60.2
+  }
+ },
+ "RAF_blur3_pretrained8-16_freeze": {
+  "rep0": {
+   "test_3": 60.4
+  }
+ },
+ "RAF_blur3_pretrained4-8_freeze": {
+  "rep0": {
+   "test_3": 60.89
+  }
+ },
+ "RAF_blur4_pretrained8-16_freeze": {
+  "rep0": {
+   "test_4": 60.66
+  }
+ },
+ "RAF_blur4_pretrained4-8_freeze": {
+  "rep0": {
+   "test_4": 61.51
+  }
+ },
+ "RAF_blur5_pretrained8-16_freeze": {
+  "rep0": {
+   "test_5": 60.43
+  }
+ },
+ "RAF_blur5_pretrained4-8_freeze": {
+  "rep0": {
+   "test_5": 61.96
+  }
+ },
+ "RAF_blur6_pretrained8-16_freeze": {
+  "rep0": {
+   "test_6": 60.4
+  }
+ },
+ "RAF_blur6_pretrained4-8_freeze": {
+  "rep0": {
+   "test_6": 62.58
+  }
+ },
+ "RAF_blur7_pretrained8-16_freeze": {
+  "rep0": {
+   "test_7": 60.43
+  }
+ },
+ "RAF_blur7_pretrained4-8_freeze": {
+  "rep0": {
+   "test_7": 62.78
+  }
+ },
+ "RAF_blur8_pretrained4-8_freeze": {
+  "rep0": {
+   "test_8": 63.49
+  }
+ },
+ "RAF_blur9_pretrained8-16_freeze": {
+  "rep0": {
+   "test_9": 59.49
+  }
+ },
+ "RAF_blur9_pretrained4-8_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur10_pretrained8-16_freeze": {
+  "rep0": {
+   "test_10": 59.09
+  }
+ },
+ "RAF_blur10_pretrained4-8_freeze": {
+  "rep0": {
+   "test_10": 62.16
+  }
+ },
+ "RAF_blur11_pretrained8-16_freeze": {
+  "rep0": {
+   "test_11": 59.03
+  }
+ },
+ "RAF_blur11_pretrained4-8_freeze": {
+  "rep0": {
+   "test_11": 61.28
+  }
+ },
+ "RAF_blur12_pretrained8-16_freeze": {
+  "rep0": {
+   "test_12": 58.47
+  }
+ },
+ "RAF_blur12_pretrained4-8_freeze": {
+  "rep0": {
+   "test_12": 59.78
+  }
+ },
+ "RAF_blur13_pretrained8-16_freeze": {
+  "rep0": {}
+ },
+ "RAF_blur13_pretrained4-8_freeze": {
+  "rep0": {
+   "test_13": 57.14
+  }
+ },
+ "RAF_blur14_pretrained8-16_freeze": {
+  "rep0": {
+   "test_14": 57.24
+  }
+ },
+ "RAF_blur14_pretrained4-8_freeze": {
+  "rep0": {
+   "test_14": 56.1
+  }
+ },
+ "RAF_blur15_pretrained8-16_freeze": {
+  "rep0": {
+   "test_15": 56.65
+  }
+ },
+ "RAF_blur15_pretrained4-8_freeze": {
+  "rep0": {
+   "test_15": 56.26
+  }
+ },
+ "RAF_blur16_pretrained8-16_freeze": {
+  "rep0": {
+   "test_16": 56.26
+  }
+ },
+ "RAF_blur16_pretrained4-8_freeze": {
+  "rep0": {
+   "test_16": 55.67
+  }
+ },
+ "RAF_blur8_noPool_freeze": {
+  "rep0": {
+   "test_8": 57.76
+  }
+ },
+ "RAF_blur8_pretrained0-8_noPool_freeze": {
+  "rep0": {
+   "test_8": 64.9
+  }
+ },
+ "RAF_blur0_noPool_freeze": {
+  "rep0": {
+   "test_0": 79.66
+  }
+ },
+ "RAF_blur8_noPool": {
+  "rep0": {
+   "test_8": 76.79
+  }
+ },
+ "RAF_blur8_pretrained0-8_noPool": {
+  "rep0": {
+   "test_8": 81.13
+  }
+ },
+ "RAF_blur0_noPool": {
+  "rep0": {
+   "test_0": 89.28
+  }
+ }
+}

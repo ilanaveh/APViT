@@ -1,13 +1,22 @@
-from tools import test
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from tools import test
 
 
-model_name = 'RAF_blur0'
+model_name = 'RAF_blur8_pretrained0-8_freeze_fix_projs'
+test_blur = 8
 
-results = test.main(['../configs/apvit/RAF_terminal_deit.py', f'../work_dirs/{model_name}/epoch_40.pth', '--return_labels'])
+# results = test.main(['../configs/apvit/RAF_terminal_deit.py', f'../work_dirs/{model_name}/epoch_40.pth',
+#                      '--return_labels', '--metric', 'save_result', '--test_blur', str(test_blur)])
+results = test.main(['../configs/apvit/RAF_no_pooling.py', f'../work_dirs/{model_name}/epoch_40.pth',
+                     '--return_labels', '--test_blur', str(test_blur)])
+# results = test.main(['../configs/apvit/RAF_terminal_deit.py', f'../work_dirs/{model_name}/epoch_40.pth',
+#                      '--return_labels', '--test_blur', str(test_blur)])
 # results = test.main(['configs/apvit/RAF_blur8.py', f'work_dirs/{model_name}/epoch_40.pth', '--return_labels'])
 CLASSES = np.unique(results['target_class'])
 
