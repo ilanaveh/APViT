@@ -111,7 +111,9 @@ venv.bak/
 *.pkl
 *.pkl.json
 *.log.json
-work_dirs/
+work_dirs_bad_jobs/
+work_dirs_before_face_evolve_finished/
+work_dirs_BS64/
 output/
 afs
 afsout
